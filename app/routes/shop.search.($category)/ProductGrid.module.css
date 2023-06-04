@@ -12,10 +12,47 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
-.product {
-  background-color: lightgray;
+@media (min-width: 65rem) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.product:hover .image {
+  transform: scale(1.05);
+}
+
+.imageWrapper {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid lightgray;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.price {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: .5rem;
+  color: white;
+  background-color: black;
+  border: 2px solid white;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform .15s ease;
+}
+
+.title {
+  margin: 1rem 0;
 }
