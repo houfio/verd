@@ -1,0 +1,20 @@
+.wrapper {
+  width: 10rem;
+  margin: 0 1.5rem;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.option {
+  display: block;
+  margin-top: .75rem;
+  font-size: .85rem;
+  opacity: .75;
+}
+
+.selected {
+  opacity: 1;
+  font-weight: 600;
+}

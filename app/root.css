@@ -60,3 +60,8 @@ button:not(:disabled):hover {
 svg, img {
   vertical-align: middle;
 }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

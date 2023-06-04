@@ -3,7 +3,7 @@ import type { LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 import slugify from 'slugify';
 
-import products from '~/data/products.json';
+import products from '~/data/products.server.json';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
