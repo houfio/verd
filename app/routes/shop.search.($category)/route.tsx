@@ -9,7 +9,7 @@ import sorts from '~/data/sorts.server.json';
 import { OptionList } from '~/routes/shop.search.($category)/OptionList';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
-  const category = data?.category ? data.categories[data.category] : undefined;
+  const category = (data?.category ?? -1) > -1 ? data?.categories[data.category] : undefined;
 
   return [
     { title: `${category?.name ?? 'Search'} | Verd` }
