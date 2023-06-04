@@ -3,6 +3,7 @@ import fontawesome from '@fortawesome/fontawesome-svg-core/styles.css';
 import { cssBundleHref } from '@remix-run/css-bundle';
 import type { LinksFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import { Analytics } from '@vercel/analytics/react';
 
 import styles from './root.css';
 
@@ -34,6 +35,7 @@ export default function App() {
         <ScrollRestoration/>
         <Scripts/>
         <LiveReload/>
+        <Analytics/>
       </body>
     </html>
   );
