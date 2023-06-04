@@ -1,0 +1,30 @@
+.navigation {
+  display: flex;
+  height: 5rem;
+  padding: 1.5rem;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 1rem;
+}
+
+.section:last-child {
+  justify-content: flex-end;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo {
+  height: 100%;
+  transition: transform .15s ease;
+}
+
+.link.logo:hover {
+  transform: scale(1.15);
+}

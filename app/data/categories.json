@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "slug": "electronics",
+    "name": "Electronics"
+  },
+  {
+    "id": 2,
+    "slug": "jewelery",
+    "name": "Jewelery"
+  },
+  {
+    "id": 3,
+    "slug": "mens-clothing",
+    "name": "Men's Clothing"
+  },
+  {
+    "id": 4,
+    "slug": "womens-clothing",
+    "name": "Women's Clothing"
+  }
+]
