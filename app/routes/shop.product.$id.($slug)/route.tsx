@@ -7,7 +7,7 @@ import products from '~/data/products.server.json';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: `${data?.product.title} | Verd` }
+    { title: `${data?.product.brand} ${data?.product.title} | Verd` }
   ];
 };
 
@@ -19,7 +19,7 @@ export const loader = async ({ params }: LoaderArgs) => {
     return redirect('/shop');
   }
 
-  const slug = slugify(product.title, {
+  const slug = slugify(`${product.brand} ${product.title}`, {
     lower: true
   });
 

@@ -28,8 +28,10 @@ export function ProductGrid({ search, products }: Props) {
               <img src={p.image} alt={p.title} className={styles.image}/>
             </div>
             <div className={styles.title}>
-              {p.title.substring(0, 50).trim()}
-              {p.title.length > 50 && '...'}
+              {p.brand}
+              <div className={styles.line}>
+                {p.title}
+              </div>
             </div>
           </Link>
         ))}

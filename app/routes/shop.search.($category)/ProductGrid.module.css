@@ -56,3 +56,9 @@
 .title {
   margin: 1rem 0;
 }
+
+.line {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
