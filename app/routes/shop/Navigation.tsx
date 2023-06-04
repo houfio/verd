@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import styles from './Navigation.module.css';
 
 import { Badge } from '~/routes/shop/Badge';
+import { Search } from '~/routes/shop/Search';
 
 export function Navigation() {
   return (
@@ -22,7 +23,7 @@ export function Navigation() {
         </Link>
       </div>
       <div className={styles.section}>
-        search
+        <Search/>
       </div>
       <div className={styles.section}>
         <button>
