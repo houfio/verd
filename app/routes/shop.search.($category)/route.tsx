@@ -20,7 +20,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const category = categories.find(({ slug }) => slug === params.category);
 
   if (!category) {
-    return redirect('/search');
+    return redirect('/shop/search');
   }
 
   return json({

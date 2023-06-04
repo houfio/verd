@@ -6,8 +6,6 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@re
 
 import styles from './root.css';
 
-import { Navigation } from '~/components/Navigation';
-
 config.autoAddCss = false;
 
 export const links: LinksFunction = () => [
@@ -32,7 +30,6 @@ export default function App() {
         <Links/>
       </head>
       <body>
-        <Navigation/>
         <Outlet/>
         <ScrollRestoration/>
         <Scripts/>

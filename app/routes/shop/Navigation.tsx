@@ -5,19 +5,19 @@ import clsx from 'clsx';
 
 import styles from './Navigation.module.css';
 
-import { Badge } from '~/components/Badge';
+import { Badge } from '~/routes/shop/Badge';
 
 export function Navigation() {
   return (
     <nav className={styles.navigation}>
       <div className={styles.section}>
-        <Link to="/" className={clsx(styles.link, styles.logo)}>
+        <Link to="/shop" className={clsx(styles.link, styles.logo)}>
           <img src="/logo.png" alt="Verd logo" className={styles.logo}/>
         </Link>
-        <Link to="/" className={styles.link}>
+        <Link to="/shop" className={styles.link}>
           Home
         </Link>
-        <Link to="/search" className={styles.link}>
+        <Link to="/shop/search" className={styles.link}>
           Products
         </Link>
       </div>

@@ -16,7 +16,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const product = products.find(({ id }) => String(id) === params.id);
 
   if (!product) {
-    return redirect('/');
+    return redirect('/shop');
   }
 
   const slug = slugify(product.title, {
@@ -24,7 +24,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   });
 
   if (params.slug !== slug) {
-    return redirect(`/product/${product.id}/${slug}`);
+    return redirect(`/shop/product/${product.id}/${slug}`);
   }
 
   return json({
