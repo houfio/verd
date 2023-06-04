@@ -7,6 +7,8 @@ import styles from './route.module.css';
 import categories from '~/data/categories.server.json';
 import sorts from '~/data/sorts.server.json';
 import { OptionList } from '~/routes/shop.search.($category)/OptionList';
+import { ProductGrid } from '~/routes/shop.search.($category)/ProductGrid';
+import { getProducts } from '~/utils/getProducts.server';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   const category = (data?.category ?? -1) > -1 ? data?.categories[data.category] : undefined;
@@ -43,7 +45,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       category: -1,
       categories,
       sort,
-      sorts
+      sorts,
+      products: getProducts(q ?? undefined, s ?? undefined)
     });
   }
 
@@ -57,12 +60,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     category,
     categories,
     sort,
-    sorts
+    sorts,
+    products: getProducts(categories[category].id, s ?? undefined)
   });
 };
 
 export default function Categories() {
-  const { category, categories, sort, sorts } = useLoaderData<typeof loader>();
+  const { category, categories, sort, sorts, products } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
 
   const params = new URLSearchParams(searchParams);
@@ -85,12 +89,7 @@ export default function Categories() {
           }))
         ]}
       />
-      <div className={styles.content}>
-        {JSON.stringify(categories)}
-        {category}
-        {JSON.stringify(sorts)}
-        {sort}
-      </div>
+      <ProductGrid products={products}/>
       <OptionList
         title="Sort by"
         selected={sort}
