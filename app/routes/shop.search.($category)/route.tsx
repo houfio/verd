@@ -20,8 +20,8 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const url = new URL(request.url);
-  const q = url.searchParams.get('q');
-  const s = url.searchParams.get('s');
+  const q = url.searchParams.get('q') ?? undefined;
+  const s = url.searchParams.get('s') ?? undefined;
   let invalid = false;
 
   if (q === '') {
@@ -46,7 +46,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       categories,
       sort,
       sorts,
-      products: getProducts(q ?? undefined, s ?? undefined)
+      products: getProducts(q, s),
+      search: q
     });
   }
 
@@ -61,12 +62,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     categories,
     sort,
     sorts,
-    products: getProducts(categories[category].id, s ?? undefined)
+    products: getProducts(categories[category].id, s),
+    search: undefined
   });
 };
 
 export default function Categories() {
-  const { category, categories, sort, sorts, products } = useLoaderData<typeof loader>();
+  const { category, categories, sort, sorts, products, search } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
 
   const params = new URLSearchParams(searchParams);
@@ -89,7 +91,7 @@ export default function Categories() {
           }))
         ]}
       />
-      <ProductGrid products={products}/>
+      <ProductGrid search={search} products={products}/>
       <OptionList
         title="Sort by"
         selected={sort}

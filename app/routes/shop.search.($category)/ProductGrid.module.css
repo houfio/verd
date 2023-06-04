@@ -1,6 +1,21 @@
+.wrapper {
+  flex: 1;
+}
+
+.search {
+  margin-bottom: 1rem;
+}
+
+.bold {
+  font-weight: 600;
+}
+
 .grid {
   display: grid;
-  flex: 1;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
+}
+
+.product {
+  background-color: lightgray;
 }

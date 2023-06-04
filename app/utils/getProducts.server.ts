@@ -3,7 +3,6 @@ import Fuse from 'fuse.js';
 import products from '~/data/products.server.json';
 
 const fuse = new Fuse(products, {
-  shouldSort: false,
   keys: ['title'],
   threshold: .25
 });
