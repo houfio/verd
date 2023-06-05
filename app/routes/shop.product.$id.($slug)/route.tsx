@@ -11,7 +11,6 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   ];
 };
 
-
 export const loader = async ({ params }: LoaderArgs) => {
   const product = products.find(({ id }) => String(id) === params.id);
 

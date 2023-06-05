@@ -1,5 +1,15 @@
 .wrapper {
-  flex: 1;
+  margin: 1.5rem;
+  order: 1;
+  grid-column: span 2;
+}
+
+@media (min-width: 56.25rem) {
+  .wrapper {
+    margin: 0;
+    order: 0;
+    grid-column: span 1;
+  }
 }
 
 .search {
@@ -16,7 +26,7 @@
   gap: 1rem;
 }
 
-@media (min-width: 65rem) {
+@media (min-width: 37.5rem) {
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
