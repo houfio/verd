@@ -4,6 +4,7 @@ import { cssBundleHref } from '@remix-run/css-bundle';
 import type { LinksFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { Analytics } from '@vercel/analytics/react';
+import { json } from '@vercel/remix';
 
 import styles from './root.css';
 
@@ -20,6 +21,10 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: fontawesome },
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : [])
 ];
+
+export const loader = async () => json({
+  version: (process.env.VERCEL_GIT_COMMIT_SHA ?? 'develop').substring(0, 7)
+});
 
 export default function App() {
   return (

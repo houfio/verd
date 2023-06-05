@@ -14,7 +14,7 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   const category = (data?.category ?? -1) > -1 ? data?.categories[data.category] : undefined;
 
   return [
-    { title: `${category?.name ?? 'Search'} | Verd` }
+    { title: `${category?.name ?? 'Search'} | Verd Shop` }
   ];
 };
 

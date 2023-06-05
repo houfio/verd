@@ -7,7 +7,7 @@ import products from '~/data/products.server.json';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: `${data?.product.brand} ${data?.product.title} | Verd` }
+    { title: `${data?.product.brand} ${data?.product.title} | Verd Shop` }
   ];
 };
 
