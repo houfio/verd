@@ -1,4 +1,4 @@
-import { config as faConfig } from '@fortawesome/fontawesome-svg-core';
+import { config } from '@fortawesome/fontawesome-svg-core';
 import fontawesome from '@fortawesome/fontawesome-svg-core/styles.css';
 import { cssBundleHref } from '@remix-run/css-bundle';
 import type { LinksFunction } from '@remix-run/node';
@@ -8,7 +8,7 @@ import { json } from '@vercel/remix';
 
 import styles from './root.css';
 
-faConfig.autoAddCss = false;
+config.autoAddCss = false;
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -25,8 +25,6 @@ export const links: LinksFunction = () => [
 export const loader = async () => json({
   version: (process.env.VERCEL_GIT_COMMIT_SHA ?? 'develop').substring(0, 7)
 });
-
-export const config = { runtime: 'edge' };
 
 export default function App() {
   return (
