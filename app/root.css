@@ -19,11 +19,15 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-body {
+html {
   font-family: "Open Sans", sans-serif;
   overflow-x: hidden;
   overflow-y: scroll;
   line-height: 1.25;
+}
+
+html[data-headlessui-focus-visible] *:focus {
+  outline: 2px solid black;
 }
 
 ol, ul {
