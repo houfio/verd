@@ -9,5 +9,18 @@ generator client {
 }
 
 model Product {
-  id String @id @default(cuid())
+  id          String   @id @default(cuid())
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  name        String
+  brand       String
+  price       String
+  description String
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  products Product[]
 }

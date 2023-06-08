@@ -4,9 +4,9 @@ import { json, redirect } from '@vercel/remix';
 
 import styles from './route.module.css';
 
+import { OptionList } from '~/components/OptionList';
+import { sorts } from '~/constants';
 import categories from '~/data/categories.server.json';
-import sorts from '~/data/sorts.server.json';
-import { OptionList } from '~/routes/shop.search.($category)/OptionList';
 import { ProductGrid } from '~/routes/shop.search.($category)/ProductGrid';
 import { getProducts } from '~/utils/getProducts.server';
 
@@ -42,12 +42,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (!params.category) {
     return json({
+      sort,
       category: -1,
       categories,
-      sort,
-      sorts,
-      products: getProducts(q, s),
-      search: q
+      products: getProducts(q, s)
     });
   }
 
@@ -58,17 +56,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   return json({
+    sort,
     category,
     categories,
-    sort,
-    sorts,
-    products: getProducts(categories[category].id, s),
-    search: undefined
+    products: getProducts(categories[category].id, s)
   });
 };
 
 export default function Categories() {
-  const { category, categories, sort, sorts, products, search } = useLoaderData<typeof loader>();
+  const { sort, category, categories, products } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
 
   const params = new URLSearchParams(searchParams);
@@ -79,7 +75,7 @@ export default function Categories() {
     <div className={styles.container}>
       <OptionList
         title="Categories"
-        selected={category + 1}
+        active={category + 1}
         options={[
           {
             title: 'All',
@@ -91,10 +87,10 @@ export default function Categories() {
           }))
         ]}
       />
-      <ProductGrid search={search} products={products}/>
+      <ProductGrid products={products}/>
       <OptionList
         title="Sort by"
-        selected={sort}
+        active={sort}
         options={sorts.map((s) => {
           const params = new URLSearchParams(searchParams);
 

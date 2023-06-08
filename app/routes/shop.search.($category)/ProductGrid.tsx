@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link, useSearchParams } from '@remix-run/react';
 
 import styles from './ProductGrid.module.css';
 
@@ -6,16 +6,17 @@ import type { ArrayType } from '~/types';
 import type { getProducts } from '~/utils/getProducts.server';
 
 type Props = {
-  search?: string,
   products: ArrayType<ReturnType<typeof getProducts>>[]
 };
 
-export function ProductGrid({ search, products }: Props) {
+export function ProductGrid({ products }: Props) {
+  const [searchParams] = useSearchParams();
+
   return (
     <div className={styles.wrapper}>
-      {search && (
+      {searchParams.has('q') && (
         <div className={styles.search}>
-          Showing results for <span className={styles.bold}>"{search}"</span>
+          Showing results for <span className={styles.bold}>"{searchParams.get('q')}"</span>
         </div>
       )}
       <div className={styles.grid}>

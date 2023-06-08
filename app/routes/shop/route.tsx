@@ -1,7 +1,7 @@
 import { Outlet } from '@remix-run/react';
 import type { V2_MetaFunction } from '@vercel/remix';
 
-import { Footer } from '~/routes/shop/Footer';
+import { Footer } from '~/components/Footer';
 import { Navigation } from '~/routes/shop/Navigation';
 
 export const meta: V2_MetaFunction = () => {
@@ -15,7 +15,7 @@ export default function Shop() {
     <div>
       <Navigation/>
       <Outlet/>
-      <Footer/>
+      <Footer title="Shop"/>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { NavLink } from '@remix-run/react';
 import type { To } from '@remix-run/router';
 import clsx from 'clsx';
 
@@ -6,14 +6,14 @@ import styles from './OptionList.module.css';
 
 type Props = {
   title: string,
-  selected: number,
+  active?: number,
   options: {
     title: string,
     to: To
   }[]
 };
 
-export function OptionList({ title, selected, options }: Props) {
+export function OptionList({ title, active, options }: Props) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.title}>
@@ -22,9 +22,15 @@ export function OptionList({ title, selected, options }: Props) {
       <ul>
         {options.map((option, i) => (
           <li key={i}>
-            <Link to={option.to} className={clsx(styles.option, selected === i && styles.selected)}>
+            <NavLink
+              to={option.to}
+              className={({ isActive }) => clsx(
+                styles.option,
+                (active !== undefined ? active === i : isActive) && styles.active
+              )}
+            >
               {option.title}
-            </Link>
+            </NavLink>
           </li>
         ))}
       </ul>
