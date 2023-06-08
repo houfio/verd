@@ -6,7 +6,7 @@ import styles from './route.module.css';
 
 import { OptionList } from '~/components/OptionList';
 import { sorts } from '~/constants';
-import categories from '~/data/categories.server.json';
+import { prisma } from '~/db.server';
 import { ProductGrid } from '~/routes/shop.search.($category)/ProductGrid';
 import { getProducts } from '~/utils/getProducts.server';
 
@@ -40,12 +40,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     return redirect(url.toString());
   }
 
+  const categories = await prisma.category.findMany();
+
   if (!params.category) {
     return json({
       sort,
       category: -1,
       categories,
-      products: getProducts(q, s)
+      products: getProducts(undefined, q, s)
     });
   }
 
@@ -59,7 +61,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sort,
     category,
     categories,
-    products: getProducts(categories[category].id, s)
+    products: getProducts(categories[category].id, undefined, s)
   });
 };
 

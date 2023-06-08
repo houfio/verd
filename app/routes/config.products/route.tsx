@@ -1,7 +1,11 @@
+import { ConfigHeader } from '~/components/config/ConfigHeader';
+
 export default function Products() {
   return (
     <div>
-      Products
+      <ConfigHeader
+        title={['Products']}
+      />
     </div>
   );
 }

@@ -7,13 +7,13 @@ const fuse = new Fuse(products, {
   threshold: .25
 });
 
-export function getProducts(filter: number | string | undefined, sort: string | undefined) {
+export function getProducts(category: string | undefined, search: string | undefined, sort: string | undefined) {
   let result = [...products];
 
-  if (typeof filter === 'number') {
-    result = result.filter((p) => p.category === filter);
-  } else if (typeof filter === 'string') {
-    result = fuse.search(filter).map((r) => r.item);
+  if (category) {
+    result = result.filter((p) => p.category === category);
+  } else if (search) {
+    result = fuse.search(search).map((r) => r.item);
   }
 
   if (sort === 'price-asc') {

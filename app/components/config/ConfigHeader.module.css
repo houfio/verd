@@ -1,0 +1,21 @@
+.header {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+}
+
+.title > span:last-child {
+  font-weight: 600;
+}
+
+.title > span:not(:last-child)::after {
+  content: " / ";
+}
+
+.action {
+  transition: transform .15s ease;
+}
+
+.action:hover {
+  transform: scale(1.15);
+}
