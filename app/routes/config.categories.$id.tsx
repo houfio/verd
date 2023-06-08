@@ -55,7 +55,7 @@ export default function Category() {
   const { category } = useLoaderData<typeof loader>();
 
   return (
-    <div>
+    <>
       <ConfigHeader
         title={['Categories', category ? category.name : 'Add']}
       />
@@ -66,6 +66,6 @@ export default function Category() {
           {category ? 'Update' : 'Add'}
         </button>
       </Form>
-    </div>
+    </>
   );
 }

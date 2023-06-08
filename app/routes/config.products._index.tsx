@@ -7,34 +7,35 @@ import { prisma } from '~/db.server';
 
 export const loader = async () => {
   return json({
-    categories: await prisma.category.findMany({
+    products: await prisma.product.findMany({
       select: {
         id: true,
-        name: true
+        name: true,
+        brand: true
       }
     })
   });
 };
 
 export default function Categories() {
-  const { categories } = useLoaderData<typeof loader>();
+  const { products } = useLoaderData<typeof loader>();
 
   return (
     <>
       <ConfigHeader
-        title={['Categories']}
+        title={['Products']}
         actions={[
           {
             icon: faPlus,
-            to: '/config/categories/add'
+            to: '/config/products/add'
           }
         ]}
       />
       <ul>
-        {categories.map((category) => (
-          <li key={category.id}>
-            <Link to={`/config/categories/${category.id}`}>
-              {category.name}
+        {products.map((product) => (
+          <li key={product.id}>
+            <Link to={`/config/products/${product.id}`}>
+              {product.brand} {product.name}
             </Link>
           </li>
         ))}

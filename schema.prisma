@@ -14,8 +14,9 @@ model Product {
   categoryId  String
   name        String
   brand       String
-  price       String
+  price       Float
   description String
+  images      String[]
 }
 
 model Category {

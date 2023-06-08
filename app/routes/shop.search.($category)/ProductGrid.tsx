@@ -1,12 +1,10 @@
+import type { Product } from '@prisma/client';
 import { Link, useSearchParams } from '@remix-run/react';
 
 import styles from './ProductGrid.module.css';
 
-import type { ArrayType } from '~/types';
-import type { getProducts } from '~/utils/getProducts.server';
-
 type Props = {
-  products: ArrayType<ReturnType<typeof getProducts>>[]
+  products: Product[]
 };
 
 export function ProductGrid({ products }: Props) {
@@ -26,12 +24,12 @@ export function ProductGrid({ products }: Props) {
               <div className={styles.price}>
                 £{p.price.toFixed(2)}
               </div>
-              <img src={p.image} alt={p.title} className={styles.image}/>
+              <img src={p.images[0]} alt={p.name} className={styles.image}/>
             </div>
             <div className={styles.title}>
               {p.brand}
               <div className={styles.line}>
-                {p.title}
+                {p.name}
               </div>
             </div>
           </Link>

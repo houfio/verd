@@ -3,32 +3,32 @@ import type { LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 import slugify from 'slugify';
 
-import products from '~/data/products.server.json';
+import { prisma } from '~/db.server';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: `${data?.product.brand} ${data?.product.title} | Verd Shop` }
+    { title: `${data?.product.brand} ${data?.product.name} | Verd Shop` }
   ];
 };
 
-export const loader = async ({ params }: LoaderArgs) => {
-  const product = products.find(({ id }) => String(id) === params.id);
+export const loader = async ({ params: { id, slug } }: LoaderArgs) => {
+  const product = await prisma.product.findUnique({
+    where: { id }
+  });
 
   if (!product) {
     return redirect('/shop');
   }
 
-  const slug = slugify(`${product.brand} ${product.title}`, {
+  const s = slugify(`${product.brand} ${product.name}`, {
     lower: true
   });
 
-  if (params.slug !== slug) {
-    return redirect(`/shop/product/${product.id}/${slug}`);
+  if (s !== slug) {
+    return redirect(`/shop/product/${product.id}/${s}`);
   }
 
-  return json({
-    product
-  });
+  return json({ product });
 };
 
 export default function Product() {

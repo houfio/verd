@@ -8,7 +8,6 @@ import { OptionList } from '~/components/OptionList';
 import { sorts } from '~/constants';
 import { prisma } from '~/db.server';
 import { ProductGrid } from '~/routes/shop.search.($category)/ProductGrid';
-import { getProducts } from '~/utils/getProducts.server';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   const category = (data?.category ?? -1) > -1 ? data?.categories[data.category] : undefined;
@@ -47,7 +46,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       sort,
       category: -1,
       categories,
-      products: getProducts(undefined, q, s)
+      products: await prisma.product.findMany({
+        where: { name: { contains: q } },
+        orderBy: {
+          price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
+        }
+      })
     });
   }
 
@@ -61,7 +65,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sort,
     category,
     categories,
-    products: getProducts(categories[category].id, undefined, s)
+    products: await prisma.product.findMany({
+      where: { category: { slug: params.category } },
+      orderBy: {
+        price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
+      }
+    })
   });
 };
 
