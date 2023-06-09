@@ -3,7 +3,10 @@ import type { LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 import slugify from 'slugify';
 
+import styles from './route.module.css';
+
 import { prisma } from '~/db.server';
+import { Carousel } from '~/routes/shop.product.$id.($slug)/Carousel';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -35,8 +38,16 @@ export default function Product() {
   const { product } = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      {JSON.stringify(product)}
+    <div className={styles.container}>
+      <Carousel product={product}/>
+      <div>
+        <div>
+          {product.brand}
+        </div>
+        <div>
+          {product.name}
+        </div>
+      </div>
     </div>
   );
 }

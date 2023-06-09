@@ -1,0 +1,19 @@
+.image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  padding: 1rem;
+  border: 1px solid lightgray;
+  transition: border .15s ease;
+}
+
+.preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.preview .image:hover {
+  border-color: black;
+}
