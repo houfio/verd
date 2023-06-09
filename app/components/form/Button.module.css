@@ -1,0 +1,13 @@
+.button {
+  padding: .5rem;
+  color: white;
+  background-color: black;
+  font-size: .85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: opacity .15s ease;
+}
+
+.button:hover {
+  opacity: .85;
+}

@@ -4,6 +4,7 @@ import type { ActionArgs, LoaderArgs } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 
 import { ConfigHeader } from '~/components/config/ConfigHeader';
+import { Button } from '~/components/form/Button';
 import { Input } from '~/components/form/Input';
 import { Select } from '~/components/form/Select';
 import { prisma } from '~/db.server';
@@ -109,9 +110,7 @@ export default function Product() {
         )) : (
           <Input name="image" label="Image"/>
         )}
-        <button type="submit">
-          {product ? 'Update' : 'Add'}
-        </button>
+        <Button text={product ? 'Update' : 'Add'} type="submit"/>
       </Form>
     </>
   );

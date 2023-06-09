@@ -4,6 +4,7 @@ import type { ActionArgs, LoaderArgs } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 
 import { ConfigHeader } from '~/components/config/ConfigHeader';
+import { Button } from '~/components/form/Button';
 import { Input } from '~/components/form/Input';
 import { prisma } from '~/db.server';
 import { setMessage } from '~/session.server';
@@ -62,9 +63,7 @@ export default function Category() {
       <Form method="post">
         <Input name="name" label="Name" defaultValue={category?.name}/>
         <Input name="slug" label="Slug" defaultValue={category?.slug}/>
-        <button type="submit">
-          {category ? 'Update' : 'Add'}
-        </button>
+        <Button text={category ? 'Update' : 'Add'} type="submit"/>
       </Form>
     </>
   );
