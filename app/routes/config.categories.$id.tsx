@@ -1,5 +1,5 @@
 import type { Category as CategoryType } from '@prisma/client';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs, LoaderArgs } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 
@@ -7,7 +7,6 @@ import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Button } from '~/components/form/Button';
 import { Input } from '~/components/form/Input';
 import { prisma } from '~/db.server';
-import { setMessage } from '~/session.server';
 
 export const loader = async ({ params: { id } }: LoaderArgs) => {
   if (id === 'add') {
@@ -31,7 +30,7 @@ export const action = async ({ request, params: { id } }: ActionArgs) => {
   const slug = data.get('slug');
 
   if (!name || typeof name !== 'string' || !slug || typeof slug !== 'string') {
-    return json({}, await setMessage(request, 'error', 'Invalid data'));
+    return json({ message: 'Invalid data' });
   }
 
   try {
@@ -46,7 +45,7 @@ export const action = async ({ request, params: { id } }: ActionArgs) => {
       });
     }
   } catch {
-    return json({}, await setMessage(request, 'error', 'Already exists'));
+    return json({ message: 'Already exists' });
   }
 
   return redirect('/config/categories');
@@ -54,11 +53,13 @@ export const action = async ({ request, params: { id } }: ActionArgs) => {
 
 export default function Category() {
   const { category } = useLoaderData<typeof loader>();
+  const data = useActionData<typeof action>();
 
   return (
     <>
       <ConfigHeader
         title={['Categories', category ? category.name : 'Add']}
+        message={data?.message}
       />
       <Form method="post">
         <Input name="name" label="Name" defaultValue={category?.name}/>
