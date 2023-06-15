@@ -1,16 +1,17 @@
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLoaderData } from '@remix-run/react';
 import { json } from '@vercel/remix';
 
 import { ConfigHeader } from '~/components/config/ConfigHeader';
+import { Table } from '~/components/config/Table';
 import { prisma } from '~/db.server';
 
 export const loader = async () => {
   return json({
     categories: await prisma.category.findMany({
-      select: {
-        id: true,
-        name: true
+      include: {
+        _count: true
       }
     })
   });
@@ -30,15 +31,31 @@ export default function Categories() {
           }
         ]}
       />
-      <ul>
-        {categories.map((category) => (
-          <li key={category.id}>
-            <Link to={`/config/categories/${category.id}`}>
-              {category.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <Table
+        id={(category) => category.id}
+        columns={{
+          name: { label: 'Name' },
+          _count: {
+            label: 'Products',
+            render: (count) => count.products
+          },
+          id: {
+            label: 'Actions',
+            shrink: true,
+            render: (id) => (
+              <div id="actions">
+                <Link to={`/config/categories/${id}`}>
+                  <FontAwesomeIcon icon={faPenToSquare}/>
+                </Link>
+                <button>
+                  <FontAwesomeIcon icon={faTrash}/>
+                </button>
+              </div>
+            )
+          }
+        }}
+        rows={categories}
+      />
     </>
   );
 }

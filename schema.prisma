@@ -17,6 +17,7 @@ model Product {
   price       Float
   description String
   images      String[]
+  results     Result[]
 }
 
 model Category {
@@ -24,4 +25,44 @@ model Category {
   name     String
   slug     String    @unique
   products Product[]
+}
+
+enum Survey {
+  PRE
+  POST
+}
+
+model Question {
+  id      String       @id @default(cuid())
+  survey  Survey
+  title   String
+  type    QuestionType
+  order   Int
+  data    String
+  answers Answer[]
+
+  @@unique([survey, order])
+}
+
+enum QuestionType {
+  SELECT
+  SCALE
+  OPEN
+}
+
+model Result {
+  id       String    @id @default(cuid())
+  date     DateTime
+  answers  Answer[]
+  products Product[]
+}
+
+model Answer {
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+  result     Result   @relation(fields: [resultId], references: [id])
+  resultId   String
+  answer     String
+
+  @@id([resultId, questionId])
 }

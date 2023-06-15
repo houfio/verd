@@ -1,0 +1,31 @@
+.table {
+  width: 100%;
+}
+
+.head {
+  color: white;
+  background-color: black;
+  text-align: left;
+}
+
+.head th {
+  padding: .5rem;
+}
+
+.body td {
+  padding: .5rem;
+}
+
+.body td :global(#actions) {
+  display: flex;
+  justify-content: space-around;
+}
+
+.body tr:nth-child(even) {
+  background-color: whitesmoke;
+}
+
+.shrink {
+  width: .01%;
+  white-space: nowrap;
+}
