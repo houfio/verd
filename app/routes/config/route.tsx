@@ -20,6 +20,10 @@ export default function Config() {
           title="Config"
           options={[
             {
+              title: 'Questions',
+              to: '/config/questions'
+            },
+            {
               title: 'Products',
               to: '/config/products'
             },

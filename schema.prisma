@@ -38,7 +38,7 @@ model Question {
   title   String
   type    QuestionType
   order   Int
-  data    String
+  data    Json
   answers Answer[]
 
   @@unique([survey, order])

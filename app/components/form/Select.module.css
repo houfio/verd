@@ -30,6 +30,7 @@
   border: 1px solid lightgray;
   border-top: none;
   overflow-y: auto;
+  z-index: 1;
 }
 
 .option {

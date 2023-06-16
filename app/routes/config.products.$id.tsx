@@ -43,7 +43,7 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
   })
 }, {
   upsert: async ({ name, brand, categoryId, price, description, images }) => {
-    const priceFloat = Math.round(price * 100) / 100;
+    const roundedPrice = Math.round(price * 100) / 100;
 
     if (id === 'add') {
       await prisma.product.create({
@@ -53,11 +53,13 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
           category: {
             connect: { id: categoryId }
           },
-          price: priceFloat,
+          price: roundedPrice,
           description,
           images
         }
       });
+
+      return redirect('/config/products');
     } else {
       await prisma.product.update({
         where: { id },
@@ -67,14 +69,14 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
           category: {
             connect: { id: categoryId }
           },
-          price: priceFloat,
+          price: roundedPrice,
           description,
           images
         }
       });
-    }
 
-    return redirect('/config/products');
+      return 'Successfully updated product';
+    }
   }
 });
 

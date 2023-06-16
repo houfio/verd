@@ -37,14 +37,16 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
       await prisma.category.create({
         data: { name, slug }
       });
+
+      return redirect('/config/categories');
     } else {
       await prisma.category.update({
         where: { id },
         data: { name, slug }
       });
-    }
 
-    return redirect('/config/categories');
+      return 'Successfully updated category';
+    }
   }
 });
 

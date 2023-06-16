@@ -1,3 +1,3 @@
 import { redirect } from '@vercel/remix';
 
-export const loader = async () => redirect('/config/products');
+export const loader = async () => redirect('/config/questions');

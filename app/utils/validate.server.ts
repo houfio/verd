@@ -1,4 +1,4 @@
-import type { TypeOf, ZodError, ZodTypeAny } from 'zod';
+import type { TypeOf, ZodTypeAny } from 'zod';
 
 import type { ErrorResponse } from '~/types';
 import { errorResponse } from '~/utils/errorResponse.server';
@@ -20,15 +20,18 @@ export async function validate<T extends ZodTypeAny>(request: Request, shape: T)
   const result = await shape.safeParseAsync(values);
 
   if (!result.success) {
-    const error = result.error as ZodError;
-    const issues = error.issues.map((issue) => ([
-      issue.path.join('.'),
-      issue.message
-    ] as const));
+    const issues = result.error.flatten();
+    const errors = [
+      ...issues.formErrors,
+      ...Object.entries(issues.fieldErrors).flatMap(([field, messages]) => messages?.map((message) => ([
+        field,
+        message
+      ] as const)) ?? [])
+    ];
 
     return {
       success: false,
-      response: errorResponse(...issues)
+      response: errorResponse(...errors)
     };
   }
 
