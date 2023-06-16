@@ -1,0 +1,63 @@
+.backdrop, .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.backdrop {
+  background-color: rgba(0, 0, 0, .25);
+  opacity: 0;
+  z-index: 100;
+  transition: opacity .15s ease;
+}
+
+.backdrop.open {
+  opacity: 1;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 150;
+}
+
+.panel {
+  width: calc(100% - 3rem);
+  max-width: 20rem;
+  padding: 1.5rem;
+  background-color: white;
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.panel.open {
+  opacity: 1;
+  transform: none;
+}
+
+.panel :global(#actions) {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.close {
+  transition: transform .15s ease;
+}
+
+.close:hover {
+  transform: scale(1.15);
+}
