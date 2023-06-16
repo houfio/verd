@@ -5,9 +5,18 @@
   font-size: .85rem;
   font-weight: 600;
   text-transform: uppercase;
-  transition: opacity .15s ease;
+  transition: background-color .15s ease, opacity .15s ease;
 }
 
 .button:hover {
   opacity: .85;
+}
+
+.white {
+  color: black;
+  background-color: white;
+}
+
+.white:hover {
+  background-color: whitesmoke;
 }

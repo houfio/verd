@@ -1,11 +1,15 @@
 import { faPenToSquare, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link, useLoaderData } from '@remix-run/react';
+import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionArgs } from '@vercel/remix';
 import { json } from '@vercel/remix';
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
 
 import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
 import { prisma } from '~/db.server';
+import { actions } from '~/utils/actions.server';
 
 export const loader = async () => {
   return json({
@@ -16,6 +20,20 @@ export const loader = async () => {
     })
   });
 };
+
+export const action = ({ request }: ActionArgs) => actions(request, {
+  delete: z.object({
+    id: z.string()
+  })
+}, {
+  delete: async ({ id }) => {
+    await prisma.category.delete({
+      where: { id }
+    });
+
+    return 'Successfully deleted category';
+  }
+});
 
 export default function Categories() {
   const { categories } = useLoaderData<typeof loader>();

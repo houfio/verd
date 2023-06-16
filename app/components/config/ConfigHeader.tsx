@@ -6,6 +6,7 @@ import type { To } from '@remix-run/router';
 import styles from './ConfigHeader.module.css';
 
 import { Message } from '~/components/config/Message';
+import type { ErrorResponse, ResponseType, SuccessResponse } from '~/types';
 
 type Props = {
   title: string[],
@@ -13,15 +14,20 @@ type Props = {
     icon: IconProp,
     to: To
   }[],
-  message?: string
+  result?: ResponseType<SuccessResponse<unknown> | ErrorResponse>
 };
 
-export function ConfigHeader({ title, actions, message }: Props) {
+export function ConfigHeader({ title, actions, result }: Props) {
   return (
     <>
-      {message && (
-        <Message message={{ message, type: 'error' }}/>
-      )}
+      <div>
+        {result?.[0] && typeof result[1] === 'string' && (
+          <Message message={{ type: 'info', message: result[1] }}/>
+        )}
+        {result?.[0] === false && result[2].map(({ field, message }, i) => (
+          <Message key={i} message={{ type: 'error', message: field ? `${field}: ${message}` : message }}/>
+        ))}
+      </div>
       <div className={styles.header}>
         <span className={styles.title}>
           {title.map((t, i) => (
@@ -37,5 +43,5 @@ export function ConfigHeader({ title, actions, message }: Props) {
         ))}
       </div>
     </>
-  )
+  );
 }

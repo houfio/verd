@@ -1,15 +1,17 @@
+import clsx from 'clsx';
 import type { HTMLProps } from 'react';
 
 import styles from './Button.module.css';
 
 type Props = {
   text: string,
-  type: 'button' | 'submit' | 'reset'
+  white?: boolean,
+  type?: 'button' | 'submit' | 'reset'
 };
 
-export function Button({ text, ...props }: Props & HTMLProps<HTMLButtonElement>) {
+export function Button({ text, white, ...props }: Props & HTMLProps<HTMLButtonElement>) {
   return (
-    <button className={styles.button} {...props}>
+    <button className={clsx(styles.button, white && styles.white)} {...props}>
       {text}
     </button>
   );

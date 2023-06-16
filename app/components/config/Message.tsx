@@ -19,7 +19,9 @@ export function Message({ message }: Props) {
 
   return hidden ? null : (
     <div className={clsx(styles.message, styles[message.type])}>
-      {message.message}
+      <pre>
+        {message.message}
+      </pre>
       <button onClick={() => setHidden(true)}>
         <FontAwesomeIcon icon={faTimes}/>
       </button>
