@@ -1,0 +1,22 @@
+.consent {
+  max-width: 75rem;
+  margin: auto;
+  padding: 1.5rem;
+}
+
+.consent h1 {
+  font-size: 1.5rem;
+}
+
+.consent strong {
+  font-weight: bold;
+}
+
+.consent ul {
+  padding-left: 2rem;
+  list-style: outside;
+}
+
+.form {
+  margin-top: 1rem;
+}

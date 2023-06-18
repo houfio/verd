@@ -26,7 +26,7 @@ export const loader = async () => json({
   version: (process.env.VERCEL_GIT_COMMIT_SHA ?? 'develop').substring(0, 7)
 });
 
-export default function App() {
+export default function Root() {
   return (
     <html lang="en">
       <head>

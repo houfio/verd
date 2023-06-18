@@ -1,0 +1,33 @@
+.wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+
+.toggle {
+  flex-shrink: 0;
+  display: block;
+  width: 1.5rem;
+  height: 1rem;
+  border: 2px solid black;
+  border-radius: .5rem;
+  transition: background-color .15s ease;
+}
+
+.toggle.checked {
+  background-color: darkseagreen;
+}
+
+.handle {
+  width: .5rem;
+  height: .5rem;
+  background-color: black;
+  border-radius: 50%;
+  transform: translateX(.15rem);
+  transition: transform .15s ease;
+}
+
+.handle.checked {
+  transform: translateX(.55rem);
+}
