@@ -1,5 +1,5 @@
 import { Form } from '@remix-run/react';
-import type { ActionArgs } from '@vercel/remix';
+import type { ActionArgs , V2_MetaFunction } from '@vercel/remix';
 import { z } from 'zod';
 
 import styles from './route.module.css';
@@ -9,6 +9,12 @@ import { Toggle } from '~/components/form/Toggle';
 import Consent from '~/routes/_index/Consent.mdx';
 import { actions } from '~/utils/actions.server';
 import { successResponse } from '~/utils/successResponse.server';
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: 'Verd' }
+  ];
+};
 
 export const action = ({ request }: ActionArgs) => actions(request, {
   accept: z.object({
