@@ -5,6 +5,7 @@ import slugify from 'slugify';
 
 import styles from './route.module.css';
 
+import { Container } from '~/components/Container';
 import { prisma } from '~/db.server';
 import { Carousel } from '~/routes/shop.product.$id.($slug)/Carousel';
 
@@ -38,7 +39,7 @@ export default function Product() {
   const { product } = useLoaderData<typeof loader>();
 
   return (
-    <div className={styles.container}>
+    <Container className={styles.container}>
       <Carousel product={product}/>
       <div>
         <div>
@@ -48,6 +49,6 @@ export default function Product() {
           {product.name}
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

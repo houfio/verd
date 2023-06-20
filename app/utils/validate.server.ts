@@ -3,9 +3,9 @@ import type { TypeOf, ZodTypeAny } from 'zod';
 import type { ErrorResponse } from '~/types';
 import { errorResponse } from '~/utils/errorResponse.server';
 
-type Validate<T extends ZodTypeAny> = { success: false, response: ErrorResponse } | { success: true, data: TypeOf<T> };
+type Validate<T extends ZodTypeAny | null> = { success: false, response: ErrorResponse } | { success: true, data: T extends ZodTypeAny ? TypeOf<T> : Record<string, unknown> };
 
-export async function validate<T extends ZodTypeAny>(request: Request, shape: T): Promise<Validate<T>> {
+export async function validate<T extends ZodTypeAny | null>(request: Request, shape: T): Promise<Validate<T>> {
   const data = await request.clone().formData();
   const values = Object.fromEntries(data) as Record<string, unknown>;
 
@@ -15,6 +15,13 @@ export async function validate<T extends ZodTypeAny>(request: Request, shape: T)
 
       values[key.substring(0, key.length - 2)] = data.getAll(key) as any;
     }
+  }
+
+  if (!shape) {
+    return {
+      success: true,
+      data: values as any
+    };
   }
 
   const result = await shape.safeParseAsync(values);

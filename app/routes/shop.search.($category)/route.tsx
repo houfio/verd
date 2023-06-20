@@ -4,8 +4,8 @@ import { json, redirect } from '@vercel/remix';
 
 import styles from './route.module.css';
 
+import { Container } from '~/components/Container';
 import { OptionList } from '~/components/OptionList';
-import { sorts } from '~/constants';
 import { prisma } from '~/db.server';
 import { ProductGrid } from '~/routes/shop.search.($category)/ProductGrid';
 
@@ -74,6 +74,21 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   });
 };
 
+export const sorts = [
+  {
+    name: 'Relevance',
+    slug: ''
+  },
+  {
+    name: 'Price: Low to High',
+    slug: 'price-asc'
+  },
+  {
+    name: 'Price: High to Low',
+    slug: 'price-desc'
+  }
+];
+
 export default function Categories() {
   const { sort, category, categories, products } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
@@ -83,7 +98,7 @@ export default function Categories() {
   params.delete('q');
 
   return (
-    <div className={styles.container}>
+    <Container className={styles.container}>
       <OptionList
         title="Categories"
         active={category + 1}
@@ -113,6 +128,6 @@ export default function Categories() {
           };
         })}
       />
-    </div>
+    </Container>
   );
 }

@@ -13,10 +13,11 @@ type Props = {
     key: string,
     value: string
   }[],
-  defaultValue?: string
+  defaultValue?: string,
+  nullable?: boolean
 };
 
-export function Select({ name, label, values, defaultValue = values[0].key }: Props) {
+export function Select({ name, label, values, defaultValue, nullable }: Props) {
   const [query, setQuery] = useState('');
 
   const filtered = !query ? values : values.filter((v) => {
@@ -25,7 +26,11 @@ export function Select({ name, label, values, defaultValue = values[0].key }: Pr
 
   return (
     <div className={styles.wrapper}>
-      <Combobox name={name} defaultValue={defaultValue}>
+      <Combobox
+        name={name}
+        defaultValue={defaultValue ?? (nullable ? undefined : values[0].key)}
+        nullable={nullable as any}
+      >
         <div className={styles.combobox}>
           <Combobox.Label>{label}</Combobox.Label>
           <div>

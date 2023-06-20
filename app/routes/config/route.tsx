@@ -3,6 +3,7 @@ import type { V2_MetaFunction } from '@vercel/remix';
 
 import styles from './route.module.css';
 
+import { Container } from '~/components/Container';
 import { Footer } from '~/components/Footer';
 import { OptionList } from '~/components/OptionList';
 
@@ -15,7 +16,7 @@ export const meta: V2_MetaFunction = () => {
 export default function Config() {
   return (
     <>
-      <main className={styles.page}>
+      <Container as="main" className={styles.page}>
         <OptionList
           title="Config"
           options={[
@@ -36,7 +37,7 @@ export default function Config() {
         <div className={styles.outlet}>
           <Outlet/>
         </div>
-      </main>
+      </Container>
       <Footer title="Config"/>
     </>
   );

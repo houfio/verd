@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import styles from './route.module.css';
 
+import { Container } from '~/components/Container';
 import { Button } from '~/components/form/Button';
 import { Toggle } from '~/components/form/Toggle';
 import ConsentText from '~/routes/consent/ConsentText.mdx';
@@ -13,7 +14,7 @@ import { actions } from '~/utils/actions.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { title: 'Verd | Consent' }
+    { title: 'Verd Consent' }
   ];
 };
 
@@ -21,7 +22,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const consent = await getConsent(request);
 
   if (consent) {
-    return redirect('/survey?kind=pre');
+    return redirect('/survey?k=pre');
   }
 
   return null;
@@ -35,13 +36,13 @@ export const action = ({ request }: ActionArgs) => actions(request, {
   accept: async () => {
     const headers = await giveConsent(request);
 
-    return redirect('/survey?kind=pre', { headers });
+    return redirect('/survey?k=pre', { headers });
   }
 });
 
 export default function Consent() {
   return (
-    <div className={styles.consent}>
+    <Container className={styles.consent}>
       <ConsentText/>
       <Form method="post" className={styles.form}>
         <input type="hidden" name="action" value="accept"/>
@@ -51,6 +52,6 @@ export default function Consent() {
         />
         <Button text="Continue" type="submit"/>
       </Form>
-    </div>
+    </Container>
   );
 }

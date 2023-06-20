@@ -33,6 +33,11 @@
   z-index: 1;
 }
 
+.options > div {
+  padding: .5rem;
+  opacity: .5;
+}
+
 .option {
   padding: .5rem;
   cursor: pointer;

@@ -1,7 +1,8 @@
 import { createCookieSessionStorage } from '@remix-run/node';
 
 type SessionData = {
-  consent: string
+  consent: string,
+  answers: string
 };
 
 const sessionStorage = createCookieSessionStorage<SessionData>({
@@ -31,6 +32,23 @@ export async function giveConsent(request: Request) {
   const session = await getSession(request);
 
   session.set('consent', 'true');
+
+  return {
+    'Set-Cookie': await sessionStorage.commitSession(session)
+  };
+}
+
+export async function getAnswers(request: Request) {
+  const session = await getSession(request);
+
+  return JSON.parse(session.get('answers') ?? '{}') as Record<string, string>;
+}
+
+export async function setAnswers(request: Request, data: Record<string, string>) {
+  const session = await getSession(request);
+  const answers = await getAnswers(request);
+
+  session.set('answers', JSON.stringify(Object.assign(answers, data)));
 
   return {
     'Set-Cookie': await sessionStorage.commitSession(session)

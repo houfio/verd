@@ -5,10 +5,10 @@ import { errorResponse } from '~/utils/errorResponse.server';
 import { successResponse } from '~/utils/successResponse.server';
 import { validate } from '~/utils/validate.server';
 
-type ActionsShapeRecord = Record<string, ZodTypeAny>;
+type ActionsShapeRecord = Record<string, ZodTypeAny | null>;
 
 type ActionsRecord<T extends ActionsShapeRecord> = {
-  [K in keyof T]: (data: TypeOf<T[K]>) => Promise<unknown>
+  [K in keyof T]: (data: T[K] extends ZodTypeAny ? TypeOf<T[K]> : Record<string, string>) => Promise<unknown>
 };
 
 type ActionsReturn<T extends ActionsShapeRecord, V extends ActionsRecord<T>> = {
@@ -27,7 +27,8 @@ export async function actions<T extends ActionsShapeRecord, V extends ActionsRec
     }
 
     try {
-      const result = await actions[action](data.data as any) as ActionsReturn<T, V>[keyof T];
+      const { action: _, ...d } = data.data;
+      const result = await actions[action](d) as ActionsReturn<T, V>[keyof T];
 
       return successResponse(result);
     } catch (e) {

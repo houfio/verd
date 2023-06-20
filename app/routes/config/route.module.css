@@ -1,7 +1,6 @@
 .page {
   display: flex;
-  max-width: 75rem;
-  margin: 1.5rem auto;
+  margin-top: 1.5rem;
 }
 
 .outlet {
