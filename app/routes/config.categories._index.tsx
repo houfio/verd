@@ -13,15 +13,13 @@ import { Button } from '~/components/form/Button';
 import { prisma } from '~/db.server';
 import { actions } from '~/utils/actions.server';
 
-export const loader = async () => {
-  return json({
-    categories: await prisma.category.findMany({
-      include: {
-        _count: true
-      }
-    })
-  });
-};
+export const loader = async () => json({
+  categories: await prisma.category.findMany({
+    include: {
+      _count: true
+    }
+  })
+});
 
 export const action = ({ request }: ActionArgs) => actions(request, {
   delete: z.object({

@@ -1,7 +1,7 @@
 import { faPenToSquare, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
-import type { ActionArgs} from '@vercel/remix';
+import type { ActionArgs } from '@vercel/remix';
 import { json } from '@vercel/remix';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
@@ -13,11 +13,9 @@ import { Button } from '~/components/form/Button';
 import { prisma } from '~/db.server';
 import { actions } from '~/utils/actions.server';
 
-export const loader = async () => {
-  return json({
-    products: await prisma.product.findMany()
-  });
-};
+export const loader = async () => json({
+  products: await prisma.product.findMany()
+});
 
 export const action = ({ request }: ActionArgs) => actions(request, {
   delete: z.object({

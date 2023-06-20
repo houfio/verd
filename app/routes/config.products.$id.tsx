@@ -101,7 +101,7 @@ export default function Product() {
           defaultValue={product?.categoryId}
         />
         <Input name="price" label="Price" type="number" step="0.01" defaultValue={product?.price}/>
-        <Input name="description" label="Description" defaultValue={product?.description}/>
+        <Input name="description" label="Description" as="textarea" defaultValue={product?.description}/>
         {product ? product.images.map((i) => (
           <Input key={i} name="images[]" label="Image" defaultValue={i}/>
         )) : (

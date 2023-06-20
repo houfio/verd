@@ -1,19 +1,30 @@
 import { Form } from '@remix-run/react';
-import type { ActionArgs , V2_MetaFunction } from '@vercel/remix';
+import type { ActionArgs, LoaderArgs, V2_MetaFunction } from '@vercel/remix';
+import { redirect } from '@vercel/remix';
 import { z } from 'zod';
 
 import styles from './route.module.css';
 
 import { Button } from '~/components/form/Button';
 import { Toggle } from '~/components/form/Toggle';
-import Consent from '~/routes/_index/Consent.mdx';
+import ConsentText from '~/routes/consent/ConsentText.mdx';
+import { getConsent, giveConsent } from '~/session.server';
 import { actions } from '~/utils/actions.server';
-import { successResponse } from '~/utils/successResponse.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { title: 'Verd' }
+    { title: 'Verd | Consent' }
   ];
+};
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const consent = await getConsent(request);
+
+  if (consent) {
+    return redirect('/survey?kind=pre');
+  }
+
+  return null;
 };
 
 export const action = ({ request }: ActionArgs) => actions(request, {
@@ -22,14 +33,16 @@ export const action = ({ request }: ActionArgs) => actions(request, {
   })
 }, {
   accept: async () => {
-    return successResponse('oke');
+    const headers = await giveConsent(request);
+
+    return redirect('/survey?kind=pre', { headers });
   }
 });
 
-export default function Index() {
+export default function Consent() {
   return (
     <div className={styles.consent}>
-      <Consent/>
+      <ConsentText/>
       <Form method="post" className={styles.form}>
         <input type="hidden" name="action" value="accept"/>
         <Toggle

@@ -7,11 +7,9 @@ import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
 import { prisma } from '~/db.server';
 
-export const loader = async () => {
-  return json({
-    questions: await prisma.question.findMany()
-  });
-};
+export const loader = async () => json({
+  questions: await prisma.question.findMany()
+});
 
 export default function Questions() {
   const { questions } = useLoaderData<typeof loader>();
