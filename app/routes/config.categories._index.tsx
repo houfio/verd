@@ -10,11 +10,11 @@ import { Modal } from '~/components/Modal';
 import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
 import { Button } from '~/components/form/Button';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 import { actions } from '~/utils/actions.server';
 
 export const loader = async () => json({
-  categories: await prisma.category.findMany({
+  categories: await db.category.findMany({
     include: {
       _count: true
     }
@@ -27,7 +27,7 @@ export const action = ({ request }: ActionArgs) => actions(request, {
   })
 }, {
   delete: async ({ id }) => {
-    await prisma.category.delete({
+    await db.category.delete({
       where: { id }
     });
 

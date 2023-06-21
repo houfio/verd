@@ -10,7 +10,7 @@ import styles from './route.module.css';
 
 import { Container } from '~/components/Container';
 import { Button } from '~/components/form/Button';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 import { OpenQuestion } from '~/routes/survey/question/OpenQuestion';
 import { ScaleQuestion } from '~/routes/survey/question/ScaleQuestion';
 import { SelectQuestion } from '~/routes/survey/question/SelectQuestion';
@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     return redirect('/');
   }
 
-  const questions = await prisma.question.findMany({
+  const questions = await db.question.findMany({
     where: { survey: k as SurveyKind },
     orderBy: { order: 'asc' }
   });

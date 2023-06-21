@@ -6,7 +6,7 @@ import styles from './route.module.css';
 
 import { Container } from '~/components/Container';
 import { OptionList } from '~/components/OptionList';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 import { ProductGrid } from '~/routes/shop.search.($category)/ProductGrid';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
@@ -39,14 +39,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     return redirect(url.toString());
   }
 
-  const categories = await prisma.category.findMany();
+  const categories = await db.category.findMany();
 
   if (!params.category) {
     return json({
       sort,
       category: -1,
       categories,
-      products: await prisma.product.findMany({
+      products: await db.product.findMany({
         where: { name: { contains: q } },
         orderBy: {
           price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
@@ -65,7 +65,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sort,
     category,
     categories,
-    products: await prisma.product.findMany({
+    products: await db.product.findMany({
       where: { category: { slug: params.category } },
       orderBy: {
         price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined

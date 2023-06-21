@@ -6,7 +6,7 @@ import slugify from 'slugify';
 import styles from './route.module.css';
 
 import { Container } from '~/components/Container';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 import { Carousel } from '~/routes/shop.product.$id.($slug)/Carousel';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
@@ -16,7 +16,7 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export const loader = async ({ params: { id, slug } }: LoaderArgs) => {
-  const product = await prisma.product.findUnique({
+  const product = await db.product.findUnique({
     where: { id }
   });
 

@@ -10,11 +10,11 @@ import { Modal } from '~/components/Modal';
 import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
 import { Button } from '~/components/form/Button';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 import { actions } from '~/utils/actions.server';
 
 export const loader = async () => json({
-  products: await prisma.product.findMany()
+  products: await db.product.findMany()
 });
 
 export const action = ({ request }: ActionArgs) => actions(request, {
@@ -23,7 +23,7 @@ export const action = ({ request }: ActionArgs) => actions(request, {
   })
 }, {
   delete: async ({ id }) => {
-    await prisma.product.delete({
+    await db.product.delete({
       where: { id }
     });
 

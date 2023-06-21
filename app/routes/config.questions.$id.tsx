@@ -9,7 +9,7 @@ import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Button } from '~/components/form/Button';
 import { Input } from '~/components/form/Input';
 import { Select } from '~/components/form/Select';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 import { actions } from '~/utils/actions.server';
 import { toOptions } from '~/utils/toOptions';
 
@@ -25,7 +25,7 @@ export const loader = async ({ params: { id } }: LoaderArgs) => {
     });
   }
 
-  const question = await prisma.question.findUnique({
+  const question = await db.question.findUnique({
     where: { id }
   });
 
@@ -51,31 +51,24 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
   upsert: async ({ title, survey, type, data }) => {
     const parsedData = JSON.parse(data);
 
-    if (id === 'add') {
-      await prisma.question.create({
-        data: {
-          title,
-          survey,
-          type,
-          data: parsedData,
-          order: await prisma.question.count({
-            where: { survey }
-          })
-        }
-      });
+    await db.question.upsert({
+      where: { id },
+      update: {
+        title,
+        data: parsedData
+      },
+      create: {
+        title,
+        survey,
+        type,
+        data: parsedData,
+        order: await db.question.count({
+          where: { survey }
+        })
+      }
+    })
 
-      return redirect('/config/questions');
-    } else {
-      await prisma.question.update({
-        where: { id },
-        data: {
-          title,
-          data: parsedData
-        }
-      });
-
-      return 'Successfully updated question';
-    }
+    return id === 'add' ? redirect('/config/questions') : 'Successfully updated question';
   }
 });
 

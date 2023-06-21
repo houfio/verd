@@ -8,11 +8,11 @@ import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Button } from '~/components/form/Button';
 import { Input } from '~/components/form/Input';
 import { Select } from '~/components/form/Select';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 import { actions } from '~/utils/actions.server';
 
 export const loader = async ({ params: { id } }: LoaderArgs) => {
-  const categories = await prisma.category.findMany();
+  const categories = await db.category.findMany();
 
   if (id === 'add') {
     return json({
@@ -21,7 +21,7 @@ export const loader = async ({ params: { id } }: LoaderArgs) => {
     });
   }
 
-  const product = await prisma.product.findUnique({
+  const product = await db.product.findUnique({
     where: { id }
   });
 
@@ -43,40 +43,24 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
   })
 }, {
   upsert: async ({ name, brand, categoryId, price, description, images }) => {
-    const roundedPrice = Math.round(price * 100) / 100;
-
-    if (id === 'add') {
-      await prisma.product.create({
-        data: {
-          name,
-          brand,
-          category: {
-            connect: { id: categoryId }
-          },
-          price: roundedPrice,
-          description,
-          images
-        }
-      });
-
-      return redirect('/config/products');
-    } else {
-      await prisma.product.update({
-        where: { id },
-        data: {
-          name,
-          brand,
-          category: {
-            connect: { id: categoryId }
-          },
-          price: roundedPrice,
-          description,
-          images
-        }
-      });
-
-      return 'Successfully updated product';
+    const data = {
+      name,
+      brand,
+      category: {
+        connect: { id: categoryId }
+      },
+      price: Math.round(price * 100) / 100,
+      description,
+      images
     }
+
+    await db.product.upsert({
+      where: { id },
+      update: data,
+      create: data
+    });
+
+    return id === 'add' ? redirect('/config/products') : 'Successfully updated product';
   }
 });
 

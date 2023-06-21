@@ -5,10 +5,10 @@ import { json } from '@vercel/remix';
 
 import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
-import { prisma } from '~/db.server';
+import { db } from '~/db.server';
 
 export const loader = async () => json({
-  questions: await prisma.question.findMany()
+  questions: await db.question.findMany()
 });
 
 export default function Questions() {
