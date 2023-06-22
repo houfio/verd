@@ -17,7 +17,7 @@ export function SelectQuestion({ question, answer }: Props) {
     <Select
       name={question.id}
       label={`${question.order + 1}. ${question.title}`}
-      values={toOptions(question.data.options as string[], false)}
+      values={toOptions([...question.data.options as string[], 'Prefer not to say'], false)}
       defaultValue={answer}
       nullable={true}
     />
