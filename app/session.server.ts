@@ -9,9 +9,10 @@ const sessionStorage = createCookieSessionStorage<SessionData>({
   cookie: {
     name: '__session',
     httpOnly: true,
+    maxAge: 31_556_952, // one year
     path: '/',
     sameSite: 'lax',
-    secrets: [process.env.SESSION_SECRET],
+    secrets: [process.env.SESSION_SECRET ?? ''],
     secure: process.env.NODE_ENV === 'production'
   }
 });
