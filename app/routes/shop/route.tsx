@@ -1,10 +1,10 @@
 import { Outlet } from '@remix-run/react';
 import type { LoaderArgs, V2_MetaFunction } from '@vercel/remix';
-import { redirect } from '@vercel/remix';
+import { json, redirect } from '@vercel/remix';
 
 import { Footer } from '~/components/Footer';
 import { Navigation } from '~/routes/shop/Navigation';
-import { getConsent } from '~/session.server';
+import { getConsent, getProducts } from '~/session.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -19,7 +19,9 @@ export const loader = async ({ request }: LoaderArgs) => {
     return redirect('/');
   }
 
-  return null;
+  const products = await getProducts(request);
+
+  return json({ products });
 };
 
 export default function Shop() {

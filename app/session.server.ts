@@ -2,7 +2,8 @@ import { createCookieSessionStorage } from '@remix-run/node';
 
 type SessionData = {
   consent: string,
-  answers: string
+  answers: string,
+  products: string
 };
 
 const sessionStorage = createCookieSessionStorage<SessionData>({
@@ -50,6 +51,29 @@ export async function setAnswers(request: Request, data: Record<string, string>)
   const answers = await getAnswers(request);
 
   session.set('answers', JSON.stringify(Object.assign(answers, data)));
+
+  return {
+    'Set-Cookie': await sessionStorage.commitSession(session)
+  };
+}
+
+export async function getProducts(request: Request) {
+  const session = await getSession(request);
+
+  return JSON.parse(session.get('products') ?? '[]') as string[];
+}
+
+export async function toggleProduct(request: Request, product: string) {
+  const session = await getSession(request);
+  let products = await getProducts(request);
+
+  if (products.includes(product)) {
+    products = products.filter((p) => p !== product);
+  } else {
+    products = [...products, product];
+  }
+
+  session.set('products', JSON.stringify(products));
 
   return {
     'Set-Cookie': await sessionStorage.commitSession(session)

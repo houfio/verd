@@ -8,7 +8,7 @@ type Props = {
 };
 
 export function Footer({ title }: Props) {
-  const data = useMatchesData('root');
+  const data = useMatchesData<{ version: string }>('root');
 
   return (
     <Container as="footer" className={styles.footer}>
@@ -17,7 +17,7 @@ export function Footer({ title }: Props) {
         Verd {title}
       </div>
       <span className={styles.version}>
-        {data?.version as string}
+        {data?.version}
       </span>
     </Container>
   );
