@@ -1,3 +1,4 @@
+import type { Product as ProductType } from '@prisma/client';
 import { Form, useLoaderData } from '@remix-run/react';
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
@@ -51,8 +52,8 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
-  const data = useMatchesData<{ products: string[] }>('routes/shop');
-  const basket = data?.products.indexOf(product.id) !== -1;
+  const data = useMatchesData<{ products: Partial<ProductType>[] }>('routes/shop');
+  const basket = data?.products.find((p) => p.id === product.id);
 
   return (
     <Container>

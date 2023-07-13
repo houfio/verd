@@ -10,7 +10,7 @@ import { BasketModal } from '~/routes/shop/basket/BasketModal';
 
 export function Basket() {
   const [open, setOpen] = useState(false);
-  const data = useMatchesData<{ products: string[] }>('routes/shop');
+  const data = useMatchesData<{ products: unknown[] }>('routes/shop');
 
   return (
     <>

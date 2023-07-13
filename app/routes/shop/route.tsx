@@ -3,6 +3,7 @@ import type { LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 
 import { Footer } from '~/components/Footer';
+import { db } from '~/db.server';
 import { Navigation } from '~/routes/shop/Navigation';
 import { getConsent, getProducts } from '~/session.server';
 
@@ -19,7 +20,19 @@ export const loader = async ({ request }: LoaderArgs) => {
     return redirect('/');
   }
 
-  const products = await getProducts(request);
+  const productIds = await getProducts(request);
+  const products = await db.product.findMany(({
+    where: {
+      id: { in: productIds }
+    },
+    select: {
+      id: true,
+      name: true,
+      brand: true,
+      images: true,
+      price: true
+    }
+  }))
 
   return json({ products });
 };

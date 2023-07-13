@@ -50,3 +50,9 @@
 .close:hover {
   transform: scale(1.15);
 }
+
+.products {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem;
+}

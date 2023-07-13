@@ -1,0 +1,24 @@
+.product {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid lightgray;
+}
+
+.image {
+  width: 5rem;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.details > span:first-child {
+  opacity: .35;
+}
