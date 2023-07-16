@@ -58,25 +58,30 @@ export default function Product() {
   return (
     <Container>
       <div className={styles.container}>
-        <Carousel product={product}/>
-        <div>
-          <div>
-            {product.brand}
-          </div>
-          <div>
-            {product.name}
+        <div className={styles.details}>
+          <div className={styles.title}>
+            <span>
+              {product.brand}
+            </span>
+            <span>
+              {product.name}
+            </span>
+            <span>
+              £{product.price.toFixed(2)}
+            </span>
           </div>
           <Form method="post">
             <input type="hidden" name="action" value="basket"/>
             <Button text={basket ? 'Remove from basket' : 'Add to basket'}/>
           </Form>
         </div>
+        <Carousel product={product}/>
       </div>
-      <div>
-        <div>
+      <div className={styles.description}>
+        <div className={styles.header}>
           {product.name}
         </div>
-        <div style={{ whiteSpace: 'pre-wrap' }}>
+        <div>
           {product.description}
         </div>
       </div>

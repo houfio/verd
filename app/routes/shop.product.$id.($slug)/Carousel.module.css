@@ -1,3 +1,10 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 1rem;
+}
+
 .image {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -8,12 +15,28 @@
 }
 
 .preview {
+  flex: 1 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
 .preview .image:hover {
   border-color: black;
+}
+
+@media (min-width: 56.25rem) {
+  .wrapper {
+    flex-direction: row;
+  }
+
+  .image.selected {
+    order: 1;
+    width: calc(100% - 7.5rem);
+  }
+
+  .preview {
+    display: flex;
+    flex-direction: column;
+  }
 }
