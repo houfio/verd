@@ -1,4 +1,3 @@
-import type { Product as ProductType } from '@prisma/client';
 import { Form, useLoaderData } from '@remix-run/react';
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
@@ -9,7 +8,7 @@ import styles from './route.module.css';
 import { Container } from '~/components/Container';
 import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
-import { useMatchesData } from '~/hooks/useMatchesData';
+import { useShopData } from '~/hooks/useShopData';
 import { Carousel } from '~/routes/shop.product.$id.($slug)/Carousel';
 import { toggleProduct } from '~/session.server';
 import { actions } from '~/utils/actions.server';
@@ -52,8 +51,8 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
-  const data = useMatchesData<{ products: Partial<ProductType>[] }>('routes/shop');
-  const basket = data?.products.find((p) => p.id === product.id);
+  const { products } = useShopData();
+  const basket = products.find((p) => p.id === product.id);
 
   return (
     <Container>

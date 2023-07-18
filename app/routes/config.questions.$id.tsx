@@ -66,7 +66,7 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
           where: { survey }
         })
       }
-    })
+    });
 
     return id === 'add' ? redirect('/config/questions') : 'Successfully updated question';
   }

@@ -2,13 +2,14 @@ import styles from './Footer.module.css';
 
 import { Container } from '~/components/Container';
 import { useMatchesData } from '~/hooks/useMatchesData';
+import type { loader } from '~/root';
 
 type Props = {
   title: string
 };
 
 export function Footer({ title }: Props) {
-  const data = useMatchesData<{ version: string }>('root');
+  const data = useMatchesData<typeof loader>('root');
 
   return (
     <Container as="footer" className={styles.footer}>

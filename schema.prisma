@@ -4,14 +4,15 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  provider = "prisma-client-js"
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  category    Category @relation(fields: [categoryId], references: [id])
+  id          String    @id @default(cuid())
+  category    Category  @relation(fields: [categoryId], references: [id])
   categoryId  String
+  scenario    Scenario? @relation(fields: [scenarioId], references: [id])
+  scenarioId  String?
   name        String
   brand       String
   price       Float
@@ -24,6 +25,13 @@ model Category {
   id       String    @id @default(cuid())
   name     String
   slug     String    @unique
+  products Product[]
+}
+
+model Scenario {
+  id       String    @id @default(cuid())
+  name     String
+  text     String
   products Product[]
 }
 

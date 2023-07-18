@@ -13,7 +13,7 @@ type Props = {
     key: string,
     value: string
   }[],
-  defaultValue?: string,
+  defaultValue?: string | null,
   nullable?: boolean
 };
 

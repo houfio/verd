@@ -27,5 +27,5 @@ export function Toggle({ name, label, defaultChecked }: Props) {
         </Switch.Label>
       </div>
     </Switch.Group>
-  )
+  );
 }

@@ -16,6 +16,7 @@ module.exports = {
         }
       }
     ],
-    'react-hooks/exhaustive-deps': 'off'
+    'react-hooks/exhaustive-deps': 'off',
+    'semi': ['error', 'always']
   }
 };

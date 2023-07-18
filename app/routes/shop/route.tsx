@@ -27,14 +27,16 @@ export const loader = async ({ request }: LoaderArgs) => {
     },
     select: {
       id: true,
+      scenarioId: true,
       name: true,
       brand: true,
       images: true,
       price: true
     }
-  }))
+  }));
+  const scenarios = await db.scenario.findMany();
 
-  return json({ products });
+  return json({ products, scenarios });
 };
 
 export default function Shop() {

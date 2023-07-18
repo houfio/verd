@@ -31,6 +31,10 @@ export default function Config() {
             {
               title: 'Categories',
               to: '/config/categories'
+            },
+            {
+              title: 'Scenarios',
+              to: '/config/scenarios'
             }
           ]}
         />

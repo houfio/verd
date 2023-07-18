@@ -14,7 +14,11 @@ import { db } from '~/db.server';
 import { actions } from '~/utils/actions.server';
 
 export const loader = async () => json({
-  products: await db.product.findMany()
+  scenarios: await db.scenario.findMany({
+    include: {
+      _count: true
+    }
+  })
 });
 
 export const action = ({ request }: ActionArgs) => actions(request, {
@@ -23,16 +27,16 @@ export const action = ({ request }: ActionArgs) => actions(request, {
   })
 }, {
   delete: async ({ id }) => {
-    await db.product.delete({
+    await db.scenario.delete({
       where: { id }
     });
 
-    return 'Successfully deleted product';
+    return 'Successfully deleted scenario';
   }
 });
 
-export default function Products() {
-  const { products } = useLoaderData<typeof loader>();
+export default function Scenarios() {
+  const { scenarios } = useLoaderData<typeof loader>();
   const result = useActionData<typeof action>();
   const [open, setOpen] = useState(false);
   const [remove, setRemove] = useState<string>();
@@ -44,30 +48,29 @@ export default function Products() {
   return (
     <>
       <ConfigHeader
-        title={['Products']}
+        title={['Scenarios']}
         actions={[
           {
             icon: faPlus,
-            to: '/config/products/add'
+            to: '/config/scenarios/add'
           }
         ]}
         result={result}
       />
       <Table
-        id={(product) => product.id}
+        id={(scenario) => scenario.id}
         columns={{
-          brand: { label: 'Brand' },
           name: { label: 'Name' },
-          price: {
-            label: 'Price',
-            render: (price) => `£${price.toFixed(2)}`
+          _count: {
+            label: 'Products',
+            render: (count) => count.products
           },
           id: {
             label: 'Actions',
             shrink: true,
             render: (id) => (
               <div id="actions">
-                <Link to={`/config/products/${id}`}>
+                <Link to={`/config/scenarios/${id}`}>
                   <FontAwesomeIcon icon={faPenToSquare}/>
                 </Link>
                 <button
@@ -82,10 +85,10 @@ export default function Products() {
             )
           }
         }}
-        rows={products}
+        rows={scenarios}
       />
       <Modal title="Delete" open={open} onClose={() => setOpen(false)}>
-        Are you sure you want to delete product {products.find((p) => p.id === remove)?.name}?
+        Are you sure you want to delete this scenario?
         <div id="actions">
           <Button text="Cancel" white={true} onClick={() => setOpen(false)}/>
           <Form method="post">

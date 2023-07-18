@@ -1,13 +1,13 @@
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
-import type { Product } from '@prisma/client';
 import { Fragment } from 'react';
 
 import styles from './BasketModal.module.css';
 
-import { useMatchesData } from '~/hooks/useMatchesData';
+import { useShopData } from '~/hooks/useShopData';
 import { BasketProduct } from '~/routes/shop/basket/BasketProduct';
+import { Scenario } from '~/routes/shop/basket/Scenario';
 
 type Props = {
   open: boolean,
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export function BasketModal({ open, onClose }: Props) {
-  const data = useMatchesData<{ products: Partial<Product>[] }>('routes/shop');
+  const { products, scenarios } = useShopData();
 
   return (
     <Transition show={open} as={Fragment}>
@@ -27,14 +27,22 @@ export function BasketModal({ open, onClose }: Props) {
           <Transition.Child as={Fragment} enterTo={styles.open}>
             <Dialog.Panel className={styles.panel}>
               <div className={styles.header}>
-                Basket
                 <button className={styles.close} onClick={onClose}>
                   <FontAwesomeIcon icon={faTimesCircle} size="xl"/>
                 </button>
               </div>
-              <div className={styles.products}>
-                {data?.products.map((product) => (
+              <div className={styles.content}>
+                <span>
+                  Basket
+                </span>
+                {products.map((product) => (
                   <BasketProduct key={product.id} product={product}/>
+                ))}
+                <span>
+                  Scenarios
+                </span>
+                {scenarios.map((scenario) => (
+                  <Scenario key={scenario.id} scenario={scenario}/>
                 ))}
               </div>
             </Dialog.Panel>
