@@ -4,6 +4,7 @@ import { json, redirect } from '@vercel/remix';
 
 import { Footer } from '~/components/Footer';
 import { db } from '~/db.server';
+import { useBasketState } from '~/hooks/useBasketState';
 import { Navigation } from '~/routes/shop/Navigation';
 import { getConsent, getProducts } from '~/session.server';
 
@@ -41,10 +42,10 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function Shop() {
   return (
-    <div>
+    <useBasketState.Provider>
       <Navigation/>
       <Outlet/>
       <Footer title="Shop"/>
-    </div>
+    </useBasketState.Provider>
   );
 }

@@ -8,6 +8,7 @@ import styles from './route.module.css';
 import { Container } from '~/components/Container';
 import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
+import { useBasketState } from '~/hooks/useBasketState';
 import { useShopData } from '~/hooks/useShopData';
 import { Carousel } from '~/routes/shop.product.$id.($slug)/Carousel';
 import { toggleProduct } from '~/session.server';
@@ -51,6 +52,7 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
+  const [, setOpen] = useBasketState();
   const { products } = useShopData();
   const basket = products.find((p) => p.id === product.id);
 
@@ -69,7 +71,10 @@ export default function Product() {
               £{product.price.toFixed(2)}
             </span>
           </div>
-          <Form method="post">
+          <Form
+            method="post"
+            onSubmit={() => setOpen(true)}
+          >
             <input type="hidden" name="action" value="basket"/>
             <Button text={basket ? 'Remove from basket' : 'Add to basket'}/>
           </Form>

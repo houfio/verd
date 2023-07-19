@@ -61,3 +61,10 @@
 .content > span:not(:first-child) {
   margin-top: 1rem;
 }
+
+.empty {
+  opacity: .35;
+  font-size: .85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}

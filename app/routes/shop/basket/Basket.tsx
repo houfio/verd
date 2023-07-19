@@ -1,15 +1,15 @@
 import { faBagShopping } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
 
 import styles from './Basket.module.css';
 
+import { useBasketState } from '~/hooks/useBasketState';
 import { useShopData } from '~/hooks/useShopData';
 import { Badge } from '~/routes/shop/basket/Badge';
 import { BasketModal } from '~/routes/shop/basket/BasketModal';
 
 export function Basket() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useBasketState();
   const { products } = useShopData();
 
   return (

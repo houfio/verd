@@ -4,6 +4,11 @@
   gap: 1rem;
   padding: 1rem;
   border: 1px solid lightgray;
+  transition: border .15s ease;
+}
+
+.product:hover {
+  border-color: black;
 }
 
 .image {

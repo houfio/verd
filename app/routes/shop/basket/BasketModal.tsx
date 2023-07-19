@@ -35,9 +35,13 @@ export function BasketModal({ open, onClose }: Props) {
                 <span>
                   Basket
                 </span>
-                {products.map((product) => (
+                {products.length ? products.map((product) => (
                   <BasketProduct key={product.id} product={product}/>
-                ))}
+                )) : (
+                  <div className={styles.empty}>
+                    Your basket is empty
+                  </div>
+                )}
                 <span>
                   Scenarios
                 </span>
