@@ -95,7 +95,7 @@ export default function Question() {
           label="Type"
           values={toOptions(questionTypes)}
         />
-        <Input name="data" label="Data" defaultValue={JSON.stringify((question as any)?.data)}/>
+        <Input name="data" label="Data" as="textarea" defaultValue={JSON.stringify((question as any)?.data)}/>
         <Button text={question ? 'Update' : 'Add'} type="submit"/>
       </Form>
     </>

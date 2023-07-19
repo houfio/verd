@@ -42,10 +42,11 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
     scenarioId: z.string().optional(),
     price: z.coerce.number(),
     description: z.string(),
+    label: z.string().trim(),
     images: z.string().array().nonempty()
   })
 }, {
-  upsert: async ({ name, brand, categoryId, scenarioId, price, description, images }) => {
+  upsert: async ({ name, brand, categoryId, scenarioId, price, description, label, images }) => {
     const data = {
       name,
       brand,
@@ -54,6 +55,7 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
       },
       price: Math.round(price * 100) / 100,
       description,
+      label: label || null,
       images
     };
 
@@ -67,7 +69,7 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
           disconnect: true
         },
       },
-      create: { 
+      create: {
         ...data,
         scenario: scenarioId ? {
           connect: { id: scenarioId }
@@ -108,6 +110,7 @@ export default function Product() {
         />
         <Input name="price" label="Price" type="number" step="0.01" defaultValue={product?.price}/>
         <Input name="description" label="Description" as="textarea" defaultValue={product?.description}/>
+        <Input name="label" label="Label" defaultValue={product?.label ?? undefined}/>
         {product ? product.images.map((i) => (
           <Input key={i} name="images[]" label="Image" defaultValue={i}/>
         )) : (

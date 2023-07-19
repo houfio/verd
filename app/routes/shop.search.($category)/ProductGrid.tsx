@@ -3,12 +3,16 @@ import { Link, useSearchParams } from '@remix-run/react';
 
 import styles from './ProductGrid.module.css';
 
+import { useShopData } from '~/hooks/useShopData';
+import { ExperimentCondition } from '~/utils/ExperimentCondition';
+
 type Props = {
   products: Product[]
 };
 
 export function ProductGrid({ products }: Props) {
   const [searchParams] = useSearchParams();
+  const { condition } = useShopData();
 
   return (
     <div className={styles.wrapper}>
@@ -25,6 +29,13 @@ export function ProductGrid({ products }: Props) {
                 £{p.price.toFixed(2)}
               </div>
               <img src={p.images[0]} alt={p.name} className={styles.image}/>
+              {condition === ExperimentCondition.LABELS && p.label && (
+                <img
+                  src={p.label}
+                  className={styles.label}
+                  alt="Certification"
+                />
+              )}
             </div>
             <div className={styles.title}>
               {p.brand}

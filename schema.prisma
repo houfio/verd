@@ -17,6 +17,7 @@ model Product {
   brand       String
   price       Float
   description String
+  label       String?
   images      String[]
   results     Result[]
 }

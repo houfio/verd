@@ -7,6 +7,7 @@ import { db } from '~/db.server';
 import { useBasketState } from '~/hooks/useBasketState';
 import { Navigation } from '~/routes/shop/Navigation';
 import { getConsent, getProducts } from '~/session.server';
+import { ExperimentCondition } from '~/utils/ExperimentCondition';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -37,7 +38,11 @@ export const loader = async ({ request }: LoaderArgs) => {
   }));
   const scenarios = await db.scenario.findMany();
 
-  return json({ products, scenarios });
+  return json({
+    products,
+    scenarios,
+    condition: ExperimentCondition.LABELS
+  });
 };
 
 export default function Shop() {

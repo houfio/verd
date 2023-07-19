@@ -63,6 +63,14 @@
   transition: transform .15s ease;
 }
 
+.label {
+  position: absolute;
+  right: .5rem;
+  top: .5rem;
+  width: 25%;
+  z-index: 1;
+}
+
 .title {
   margin: 1rem 0;
 }
