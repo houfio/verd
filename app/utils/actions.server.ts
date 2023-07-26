@@ -40,7 +40,7 @@ export async function actions<T extends ActionsShapeRecord, V extends ActionsRec
 
       const target = e.meta?.target;
       const field = Array.isArray(target) ? target[target.length - 1] : undefined;
-      const message = e.meta?.field_name as string ?? 'Already in use';
+      const message = e.meta?.field_name as string ?? (typeof e === 'string' ? e : 'Already in use');
 
       return errorResponse([field, message]);
     }

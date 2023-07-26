@@ -1,7 +1,7 @@
 import { createCookieSessionStorage } from '@remix-run/node';
 
 import { ExperimentCondition } from '~/utils/ExperimentCondition';
-import { randomEnum } from '~/utils/randomEnum';
+import { randomEnum } from '~/utils/randomEnum.server';
 
 type SessionData = {
   consent: string,

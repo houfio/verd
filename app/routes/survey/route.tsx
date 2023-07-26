@@ -1,6 +1,5 @@
 import type { Question, QuestionType } from '@prisma/client';
-import { Survey as SurveyKind } from '@prisma/client';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
 import type { ComponentType } from 'react';
@@ -9,6 +8,7 @@ import { createElement } from 'react';
 import styles from './route.module.css';
 
 import { Container } from '~/components/Container';
+import { Message } from '~/components/config/Message';
 import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
 import { OpenQuestion } from '~/routes/survey/question/OpenQuestion';
@@ -16,6 +16,7 @@ import { ScaleQuestion } from '~/routes/survey/question/ScaleQuestion';
 import { SelectQuestion } from '~/routes/survey/question/SelectQuestion';
 import { getAnswers, getConsent, setAnswers } from '~/session.server';
 import { actions } from '~/utils/actions.server';
+import { getSurveyKind } from '~/utils/getSurveyKind.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -25,15 +26,14 @@ export const meta: V2_MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const consent = await getConsent(request);
-  const url = new URL(request.url);
-  const k = url.searchParams.get('k')?.toUpperCase();
+  const kind = getSurveyKind(request);
 
-  if (!consent || !k || !(k in SurveyKind)) {
+  if (!consent || !kind) {
     return redirect('/');
   }
 
   const questions = await db.question.findMany({
-    where: { survey: k as SurveyKind },
+    where: { survey: kind },
     orderBy: { order: 'asc' }
   });
   const answers = await getAnswers(request);
@@ -48,6 +48,17 @@ export const action = ({ request }: ActionArgs) => actions(request, {
   submit: null
 }, {
   submit: async (data) => {
+    const kind = getSurveyKind(request);
+    const questions = await db.question.findMany({
+      where: { survey: kind }
+    });
+
+    for (const question of questions) {
+      if (!data[question.id]) {
+        throw 'Please answer all questions';
+      }
+    }
+
     const headers = await setAnswers(request, data);
 
     return redirect('/shop', { headers });
@@ -62,9 +73,13 @@ const types: Record<QuestionType, ComponentType<{ question: Question }>> = {
 
 export default function Survey() {
   const { questions, answers } = useLoaderData<typeof loader>();
+  const result = useActionData<typeof action>();
 
   return (
     <Container className={styles.container}>
+      {result?.[0] === false && (
+        <Message message={{ type: 'error', message: result[2][0].message }}/>
+      )}
       <Form method="post">
         <input type="hidden" name="action" value="submit"/>
         {questions.map((question) => createElement(types[question.type], {
