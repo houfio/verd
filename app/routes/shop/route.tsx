@@ -6,8 +6,7 @@ import { Footer } from '~/components/Footer';
 import { db } from '~/db.server';
 import { useBasketState } from '~/hooks/useBasketState';
 import { Navigation } from '~/routes/shop/Navigation';
-import { getConsent, getProducts } from '~/session.server';
-import { ExperimentCondition } from '~/utils/ExperimentCondition';
+import { getCondition, getConsent, getProducts } from '~/session.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -16,9 +15,9 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const consent = await getConsent(request);
+  const condition = await getCondition(request);
 
-  if (!consent) {
+  if (!condition) {
     return redirect('/');
   }
 
@@ -41,7 +40,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({
     products,
     scenarios,
-    condition: ExperimentCondition.LABELS
+    condition
   });
 };
 

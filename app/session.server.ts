@@ -1,8 +1,12 @@
 import { createCookieSessionStorage } from '@remix-run/node';
 
+import { ExperimentCondition } from '~/utils/ExperimentCondition';
+import { randomEnum } from '~/utils/randomEnum';
+
 type SessionData = {
   consent: string,
   answers: string,
+  condition: string,
   products: string
 };
 
@@ -52,9 +56,25 @@ export async function setAnswers(request: Request, data: Record<string, string>)
 
   session.set('answers', JSON.stringify(Object.assign(answers, data)));
 
+  if (!session.has('condition')) {
+    session.set('condition', randomEnum(ExperimentCondition).toString());
+  }
+
   return {
     'Set-Cookie': await sessionStorage.commitSession(session)
   };
+}
+
+export async function getCondition(request: Request) {
+  const session = await getSession(request);
+
+  if (!session.has('condition')) {
+    return;
+  }
+
+  const condition = session.get('condition');
+
+  return Number(condition) as ExperimentCondition;
 }
 
 export async function getProducts(request: Request) {
