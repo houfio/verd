@@ -17,7 +17,7 @@ export const meta: V2_MetaFunction = () => {
 export const loader = async ({ request }: LoaderArgs) => {
   const condition = await getCondition(request);
 
-  if (!condition) {
+  if (condition === undefined) {
     return redirect('/');
   }
 
