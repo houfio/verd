@@ -1,5 +1,6 @@
+import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Scenario as ScenarioType } from '@prisma/client';
-import clsx from 'clsx';
 
 import styles from './Scenario.module.css';
 
@@ -14,7 +15,8 @@ export function Scenario({ scenario }: Props) {
   const satisfied = products.some((p) => p.scenarioId === scenario.id);
 
   return (
-    <div className={clsx(styles.box, satisfied && styles.satisfied)}>
+    <div className={styles.box}>
+      <FontAwesomeIcon icon={satisfied ? faCircleCheck : faCircle} className={styles.icon}/>
       {scenario.text}
     </div>
   );

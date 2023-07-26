@@ -7,7 +7,6 @@ import styles from './BasketModal.module.css';
 
 import { useShopData } from '~/hooks/useShopData';
 import { BasketProduct } from '~/routes/shop/basket/BasketProduct';
-import { Scenario } from '~/routes/shop/basket/Scenario';
 
 type Props = {
   open: boolean,
@@ -15,7 +14,7 @@ type Props = {
 };
 
 export function BasketModal({ open, onClose }: Props) {
-  const { products, scenarios } = useShopData();
+  const { products } = useShopData();
 
   return (
     <Transition show={open} as={Fragment}>
@@ -27,14 +26,12 @@ export function BasketModal({ open, onClose }: Props) {
           <Transition.Child as={Fragment} enterTo={styles.open}>
             <Dialog.Panel className={styles.panel}>
               <div className={styles.header}>
+                Basket
                 <button className={styles.close} onClick={onClose}>
                   <FontAwesomeIcon icon={faTimesCircle} size="xl"/>
                 </button>
               </div>
               <div className={styles.content}>
-                <span>
-                  Basket
-                </span>
                 {products.length ? products.map((product) => (
                   <BasketProduct key={product.id} product={product}/>
                 )) : (
@@ -42,12 +39,6 @@ export function BasketModal({ open, onClose }: Props) {
                     Your basket is empty
                   </div>
                 )}
-                <span>
-                  Scenarios
-                </span>
-                {scenarios.map((scenario) => (
-                  <Scenario key={scenario.id} scenario={scenario}/>
-                ))}
               </div>
             </Dialog.Panel>
           </Transition.Child>
