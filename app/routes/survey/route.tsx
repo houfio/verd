@@ -77,6 +77,10 @@ export default function Survey() {
 
   return (
     <Container className={styles.container}>
+      <div className={styles.header}>
+        <img src="/logo.png" alt="Verd logo" className={styles.logo}/>
+        Survey
+      </div>
       {result?.[0] === false && (
         <Message message={{ type: 'error', message: result[2][0].message }}/>
       )}

@@ -60,10 +60,11 @@ enum QuestionType {
 }
 
 model Result {
-  id       String    @id @default(cuid())
-  date     DateTime
-  answers  Answer[]
-  products Product[]
+  id        String    @id @default(cuid())
+  date      DateTime
+  condition Int
+  answers   Answer[]
+  products  Product[]
 }
 
 model Answer {

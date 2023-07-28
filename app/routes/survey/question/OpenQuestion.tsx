@@ -9,6 +9,11 @@ type Props = {
 
 export function OpenQuestion({ question, answer }: Props) {
   return (
-    <Input name={question.id} label={`${question.order + 1}. ${question.title}`} defaultValue={answer}/>
+    <Input
+      as="textarea"
+      name={question.id}
+      label={`${question.order + 1}. ${question.title}`}
+      defaultValue={answer}
+    />
   );
 }

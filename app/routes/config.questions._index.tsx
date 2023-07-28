@@ -29,6 +29,10 @@ export default function Questions() {
         id={(question) => question.id}
         columns={{
           title: { label: 'Title' },
+          survey: {
+            label: 'Survey',
+            render: (survey) => `${survey[0]}${survey.substring(1).toLowerCase()}`
+          },
           type: {
             label: 'Type',
             render: (type) => `${type[0]}${type.substring(1).toLowerCase()}`
