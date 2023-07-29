@@ -4,9 +4,8 @@ import { json, redirect } from '@vercel/remix';
 
 import { Footer } from '~/components/Footer';
 import { db } from '~/db.server';
-import { useBasketState } from '~/hooks/useBasketState';
 import { Navigation } from '~/routes/shop/Navigation';
-import { getCondition, getConsent, getProducts } from '~/session.server';
+import { getCondition, getProducts } from '~/session.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -21,35 +20,27 @@ export const loader = async ({ request }: LoaderArgs) => {
     return redirect('/');
   }
 
-  const productIds = await getProducts(request);
-  const products = await db.product.findMany(({
-    where: {
-      id: { in: productIds }
-    },
-    select: {
-      id: true,
-      scenarioId: true,
-      name: true,
-      brand: true,
-      images: true,
-      price: true
-    }
-  }));
+  const products = await getProducts(request);
   const scenarios = await db.scenario.findMany();
 
+  if (products.length === scenarios.length) {
+    return redirect('/survey?k=post');
+  }
+
   return json({
-    products,
-    scenarios,
+    scenario: scenarios[products.length],
+    total: scenarios.length,
+    current: products.length + 1,
     condition
   });
 };
 
 export default function Shop() {
   return (
-    <useBasketState.Provider>
+    <>
       <Navigation/>
       <Outlet/>
       <Footer title="Shop"/>
-    </useBasketState.Provider>
+    </>
   );
 }

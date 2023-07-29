@@ -1,12 +1,14 @@
-import { Link } from '@remix-run/react';
+import { Link, NavLink } from '@remix-run/react';
 import clsx from 'clsx';
 
 import styles from './Navigation.module.css';
 
+import { useShopData } from '~/hooks/useShopData';
 import { Search } from '~/routes/shop/Search';
-import { Basket } from '~/routes/shop/basket/Basket';
 
 export function Navigation() {
+  const { total, current } = useShopData();
+
   return (
     <>
       <nav className={styles.navigation}>
@@ -14,18 +16,18 @@ export function Navigation() {
           <Link to="/shop" className={clsx(styles.link, styles.logo)}>
             <img src="/logo.png" alt="Verd logo" className={styles.logo}/>
           </Link>
-          <Link to="/shop">
-            Home
-          </Link>
-          <Link to="/shop/search">
+          <NavLink to="/shop" end={true}>
+            Scenario
+          </NavLink>
+          <NavLink to="/shop/search">
             Products
-          </Link>
+          </NavLink>
         </div>
         <div className={clsx(styles.section, styles.desktop)}>
           <Search/>
         </div>
         <div className={styles.section}>
-          <Basket/>
+          Scenario {current}/{total}
         </div>
       </nav>
       <div className={styles.search}>

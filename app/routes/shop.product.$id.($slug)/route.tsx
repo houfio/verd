@@ -8,8 +8,6 @@ import styles from './route.module.css';
 import { Container } from '~/components/Container';
 import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
-import { useBasketState } from '~/hooks/useBasketState';
-import { useShopData } from '~/hooks/useShopData';
 import { Carousel } from '~/routes/shop.product.$id.($slug)/Carousel';
 import { toggleProduct } from '~/session.server';
 import { actions } from '~/utils/actions.server';
@@ -46,15 +44,12 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
   basket: async () => {
     const headers = await toggleProduct(request, id as string);
 
-    return new Response(undefined, { headers });
+    return redirect('/shop', { headers });
   }
 });
 
 export default function Product() {
   const { product } = useLoaderData<typeof loader>();
-  const [, setOpen] = useBasketState();
-  const { products } = useShopData();
-  const basket = products.find((p) => p.id === product.id);
 
   return (
     <Container>
@@ -71,12 +66,9 @@ export default function Product() {
               £{product.price.toFixed(2)}
             </span>
           </div>
-          <Form
-            method="post"
-            onSubmit={() => setOpen(true)}
-          >
+          <Form method="post">
             <input type="hidden" name="action" value="basket"/>
-            <Button text={basket ? 'Remove from basket' : 'Add to basket'}/>
+            <Button text="Select product"/>
           </Form>
         </div>
         <Carousel product={product}/>

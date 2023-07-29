@@ -13,6 +13,7 @@
 
 .section:last-child {
   justify-content: flex-end;
+  color: lightgray;
 }
 
 .desktop {
@@ -40,4 +41,8 @@
 
 .link.logo:hover {
   transform: scale(1.15);
+}
+
+:global(.active) {
+  font-weight: 600;
 }
