@@ -9,7 +9,7 @@ export default function ShopIndex() {
   return (
     <Container className={styles.container}>
       This is the current scenario you're in. Find <b>one</b> appropriate product to satisfy this requirement.
-      After you've found the product, click on "<b>Select this product</b>" on the product page. You will automatically be forwarded to the next scenario.
+      When you've found the product, click on "<b>Select this product</b>" on the product page. You will automatically be forwarded to the next scenario.
       In total, there are <b>3</b> scenarios.
       <div className={styles.box}>
         Scenario {current}

@@ -83,17 +83,11 @@ export async function getProducts(request: Request) {
   return JSON.parse(session.get('products') ?? '[]') as string[];
 }
 
-export async function toggleProduct(request: Request, product: string) {
+export async function addProduct(request: Request, product: string) {
   const session = await getSession(request);
-  let products = await getProducts(request);
+  const products = await getProducts(request);
 
-  if (products.includes(product)) {
-    products = products.filter((p) => p !== product);
-  } else {
-    products = [...products, product];
-  }
-
-  session.set('products', JSON.stringify(products));
+  session.set('products', JSON.stringify([...products, product]));
 
   return {
     'Set-Cookie': await sessionStorage.commitSession(session)

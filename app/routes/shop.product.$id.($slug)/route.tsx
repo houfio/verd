@@ -1,15 +1,18 @@
 import { Form, useLoaderData } from '@remix-run/react';
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
+import { useState } from 'react';
 import slugify from 'slugify';
 
 import styles from './route.module.css';
 
 import { Container } from '~/components/Container';
+import { Modal } from '~/components/Modal';
 import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
+import { useShopData } from '~/hooks/useShopData';
 import { Carousel } from '~/routes/shop.product.$id.($slug)/Carousel';
-import { toggleProduct } from '~/session.server';
+import { addProduct } from '~/session.server';
 import { actions } from '~/utils/actions.server';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
@@ -42,14 +45,16 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
   basket: null
 }, {
   basket: async () => {
-    const headers = await toggleProduct(request, id as string);
+    const headers = await addProduct(request, id as string);
 
     return redirect('/shop', { headers });
   }
 });
 
 export default function Product() {
+  const { scenario } = useShopData();
   const { product } = useLoaderData<typeof loader>();
+  const [open, setOpen] = useState(false);
 
   return (
     <Container>
@@ -66,10 +71,7 @@ export default function Product() {
               £{product.price.toFixed(2)}
             </span>
           </div>
-          <Form method="post">
-            <input type="hidden" name="action" value="basket"/>
-            <Button text="Select product"/>
-          </Form>
+          <Button text="Select product" onClick={() => setOpen(true)}/>
         </div>
         <Carousel product={product}/>
       </div>
@@ -81,6 +83,19 @@ export default function Product() {
           {product.description}
         </div>
       </div>
+      <Modal title="Select product" open={open} onClose={() => setOpen(false)}>
+        Do you want to select this product for the following scenario?
+        <div className={styles.box}>
+          {scenario.text}
+        </div>
+        <div id="actions">
+          <Button text="Cancel" white={true} onClick={() => setOpen(false)}/>
+          <Form method="post">
+            <input type="hidden" name="action" value="basket"/>
+            <Button text="Proceed"/>
+          </Form>
+        </div>
+      </Modal>
     </Container>
   );
 }

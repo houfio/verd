@@ -28,6 +28,13 @@
   border-bottom: 1px solid lightgray;
 }
 
+.box {
+  margin-top: 1rem;
+  padding: .5rem;
+  background-color: whitesmoke;
+  border: 1px solid lightgray;
+}
+
 @media (min-width: 37.5rem) {
   .container {
     display: grid;
