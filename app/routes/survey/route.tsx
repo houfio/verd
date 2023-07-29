@@ -1,4 +1,5 @@
 import type { Question, QuestionType } from '@prisma/client';
+import { Survey as SurveyKind } from '@prisma/client';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
@@ -14,7 +15,7 @@ import { db } from '~/db.server';
 import { OpenQuestion } from '~/routes/survey/question/OpenQuestion';
 import { ScaleQuestion } from '~/routes/survey/question/ScaleQuestion';
 import { SelectQuestion } from '~/routes/survey/question/SelectQuestion';
-import { getAnswers, getConsent, setAnswers } from '~/session.server';
+import { getAnswers, getCondition, getConsent, getProducts, setAnswers } from '~/session.server';
 import { actions } from '~/utils/actions.server';
 import { getSurveyKind } from '~/utils/getSurveyKind.server';
 
@@ -49,19 +50,43 @@ export const action = ({ request }: ActionArgs) => actions(request, {
 }, {
   submit: async (data) => {
     const kind = getSurveyKind(request);
+    const totalQuestions = await db.question.count();
     const questions = await db.question.findMany({
       where: { survey: kind }
     });
 
     for (const question of questions) {
-      if (!data[question.id]) {
+      if (!(question.id in data)) {
         throw 'Please answer all questions';
       }
     }
 
-    const headers = await setAnswers(request, data);
+    const { done, answers, headers } = await setAnswers(request, data, totalQuestions);
 
-    return redirect('/shop', { headers });
+    if (done) {
+      const products = await getProducts(request);
+      const scenarios = await db.scenario.findMany();
+
+      await db.result.create({
+        data: {
+          condition: (await getCondition(request)) ?? -1,
+          answers: {
+            create: Object.entries(answers).map(([questionId, answer]) => ({
+              questionId,
+              answer
+            }))
+          },
+          products: {
+            create: products.map((productId, i) => ({
+              productId,
+              scenarioId: scenarios[i].id
+            }))
+          }
+        }
+      });
+    }
+
+    return redirect(kind === SurveyKind.PRE ? '/shop' : '/', { headers });
   }
 });
 

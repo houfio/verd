@@ -7,7 +7,8 @@ type SessionData = {
   consent: string,
   answers: string,
   condition: string,
-  products: string
+  products: string,
+  done: string
 };
 
 const sessionStorage = createCookieSessionStorage<SessionData>({
@@ -50,18 +51,30 @@ export async function getAnswers(request: Request) {
   return JSON.parse(session.get('answers') ?? '{}') as Record<string, string>;
 }
 
-export async function setAnswers(request: Request, data: Record<string, string>) {
+export async function setAnswers(request: Request, data: Record<string, string>, total: number) {
   const session = await getSession(request);
   const answers = await getAnswers(request);
+  const object = Object.assign(answers, data);
 
-  session.set('answers', JSON.stringify(Object.assign(answers, data)));
+  session.set('answers', JSON.stringify(object));
 
   if (!session.has('condition')) {
     session.set('condition', randomEnum(ExperimentCondition).toString());
   }
 
+  let done = false;
+
+  if (Object.keys(object).length === total) {
+    done = true;
+    session.set('done', 'true');
+  }
+
   return {
-    'Set-Cookie': await sessionStorage.commitSession(session)
+    done,
+    answers: object,
+    headers: {
+      'Set-Cookie': await sessionStorage.commitSession(session)
+    }
   };
 }
 
@@ -92,4 +105,10 @@ export async function addProduct(request: Request, product: string) {
   return {
     'Set-Cookie': await sessionStorage.commitSession(session)
   };
+}
+
+export async function isDone(request: Request) {
+  const session = await getSession(request);
+
+  return session.get('done') === 'true';
 }

@@ -8,10 +8,10 @@ generator client {
 }
 
 model Product {
-  id          String    @id @default(cuid())
-  category    Category  @relation(fields: [categoryId], references: [id])
+  id          String            @id @default(cuid())
+  category    Category          @relation(fields: [categoryId], references: [id])
   categoryId  String
-  scenario    Scenario? @relation(fields: [scenarioId], references: [id])
+  scenario    Scenario?         @relation(fields: [scenarioId], references: [id])
   scenarioId  String?
   name        String
   brand       String
@@ -19,7 +19,7 @@ model Product {
   description String
   label       String?
   images      String[]
-  results     Result[]
+  selected    SelectedProduct[]
 }
 
 model Category {
@@ -30,10 +30,11 @@ model Category {
 }
 
 model Scenario {
-  id       String    @id @default(cuid())
+  id       String            @id @default(cuid())
   name     String
   text     String
   products Product[]
+  selected SelectedProduct[]
 }
 
 enum Survey {
@@ -60,11 +61,11 @@ enum QuestionType {
 }
 
 model Result {
-  id        String    @id @default(cuid())
-  date      DateTime
+  id        String            @id @default(cuid())
+  date      DateTime          @default(now())
   condition Int
   answers   Answer[]
-  products  Product[]
+  products  SelectedProduct[]
 }
 
 model Answer {
@@ -75,4 +76,15 @@ model Answer {
   answer     String
 
   @@id([resultId, questionId])
+}
+
+model SelectedProduct {
+  resultId   String
+  result     Result   @relation(fields: [resultId], references: [id])
+  scenarioId String
+  scenario   Scenario @relation(fields: [scenarioId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@id([resultId, scenarioId, productId])
 }

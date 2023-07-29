@@ -4,9 +4,12 @@ import { cssBundleHref } from '@remix-run/css-bundle';
 import type { LinksFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { Analytics } from '@vercel/analytics/react';
-import { json } from '@vercel/remix';
+import type { LoaderArgs } from '@vercel/remix';
+import { json, redirect } from '@vercel/remix';
 
 import styles from './root.css';
+
+import { isDone } from '~/session.server';
 
 config.autoAddCss = false;
 
@@ -22,9 +25,18 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : [])
 ];
 
-export const loader = async () => json({
-  version: (process.env.VERCEL_GIT_COMMIT_SHA ?? 'develop').substring(0, 7)
-});
+export const loader = async ({ request }: LoaderArgs) => {
+  const done = await isDone(request);
+  const url = new URL(request.url);
+
+  if (done && url.pathname !== '/') {
+    return redirect('/');
+  }
+
+  return json({
+    version: (process.env.VERCEL_GIT_COMMIT_SHA ?? 'develop').substring(0, 7)
+  });
+};
 
 export default function Root() {
   return (

@@ -7,6 +7,11 @@
   padding: .5rem;
   border: 1px solid lightgray;
   text-align: start;
+  transition: opacity .15s ease;
+}
+
+.button:hover {
+  opacity: .85;
 }
 
 .panel {
