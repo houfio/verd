@@ -48,7 +48,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       category: -1,
       categories,
       products: shuffle(!s, await db.product.findMany({
-        where: { name: { contains: q } },
+        where: {
+          name: {
+            contains: q,
+            mode: 'insensitive'
+          }
+        },
         orderBy: {
           price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
         }
