@@ -8,6 +8,7 @@ import { Container } from '~/components/Container';
 import { OptionList } from '~/components/OptionList';
 import { db } from '~/db.server';
 import { ProductGrid } from '~/routes/shop.search.($category)/ProductGrid';
+import { shuffle } from '~/utils/shuffle.server';
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   const category = (data?.category ?? -1) > -1 ? data?.categories[data.category] : undefined;
@@ -46,12 +47,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       sort,
       category: -1,
       categories,
-      products: await db.product.findMany({
+      products: shuffle(!s, await db.product.findMany({
         where: { name: { contains: q } },
         orderBy: {
           price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
         }
-      })
+      }))
     });
   }
 
@@ -65,12 +66,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sort,
     category,
     categories,
-    products: await db.product.findMany({
+    products: shuffle(!s, await db.product.findMany({
       where: { category: { slug: params.category } },
       orderBy: {
         price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
       }
-    })
+    }))
   });
 };
 
