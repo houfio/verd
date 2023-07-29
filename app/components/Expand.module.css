@@ -1,0 +1,14 @@
+.expand {
+  display: block;
+}
+
+.button {
+  width: 100%;
+  padding: .5rem;
+  border: 1px solid lightgray;
+  text-align: start;
+}
+
+.panel {
+  padding: 1rem 1rem 0;
+}
