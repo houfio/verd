@@ -1,6 +1,7 @@
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import type { LoaderArgs, V2_MetaFunction } from '@vercel/remix';
 import { json, redirect } from '@vercel/remix';
+import Fuse from 'fuse.js';
 
 import styles from './route.module.css';
 
@@ -43,21 +44,30 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const categories = await db.category.findMany();
 
   if (!params.category) {
+    let products = shuffle(!s, await db.product.findMany({
+      orderBy: {
+        price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
+      }
+    }));
+
+    if (q) {
+      const fuse = new Fuse(products, {
+        keys: [
+          'name',
+          'brand'
+        ],
+        shouldSort: false,
+        threshold: .35
+      });
+
+      products = fuse.search(q).map((r) => r.item);
+    }
+
     return json({
       sort,
       category: -1,
       categories,
-      products: shuffle(!s, await db.product.findMany({
-        where: {
-          name: {
-            contains: q,
-            mode: 'insensitive'
-          }
-        },
-        orderBy: {
-          price: s === 'price-asc' ? 'asc' : s === 'price-desc' ? 'desc' : undefined
-        }
-      }))
+      products
     });
   }
 
