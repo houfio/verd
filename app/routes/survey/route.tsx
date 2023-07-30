@@ -9,6 +9,7 @@ import { createElement } from 'react';
 import styles from './route.module.css';
 
 import { Container } from '~/components/Container';
+import { Expand } from '~/components/Expand';
 import { Message } from '~/components/config/Message';
 import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
@@ -41,7 +42,10 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return json({
     questions,
-    answers
+    answers,
+    info: kind === SurveyKind.PRE ?
+      'The pre-exposure survey is a set of questions designed to collect basic demographic information from participants before they engage in the experiment. It helps the researchers understand the diverse backgrounds of participants. Answering the questions is voluntary, and all responses are treated confidentially, ensuring privacy and anonymity for the participants.' :
+      'The post-exposure survey is a set of questions designed to collect opinions and feedback from participants after engaging in the experiment. It helps the researchers understand and group the collected results. Answering the questions is voluntary, and all responses are treated confidentially, ensuring privacy and anonymity for the participants.'
   });
 };
 
@@ -97,7 +101,7 @@ const types: Record<QuestionType, ComponentType<{ question: Question }>> = {
 };
 
 export default function Survey() {
-  const { questions, answers } = useLoaderData<typeof loader>();
+  const { questions, answers, info } = useLoaderData<typeof loader>();
   const result = useActionData<typeof action>();
 
   return (
@@ -109,6 +113,11 @@ export default function Survey() {
       {result?.[0] === false && (
         <Message message={{ type: 'error', message: result[2][0].message }}/>
       )}
+      <div className={styles.expand}>
+        <Expand title="What is this?">
+          {info}
+        </Expand>
+      </div>
       <Form method="post">
         <input type="hidden" name="action" value="submit"/>
         {questions.map((question) => createElement(types[question.type], {
