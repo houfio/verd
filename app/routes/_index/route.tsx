@@ -7,6 +7,7 @@ import styles from './route.module.css';
 import { Container } from '~/components/Container';
 import { Expand } from '~/components/Expand';
 import { Button } from '~/components/form/Button';
+import DebriefText from '~/routes/_index/DebriefText.mdx';
 import { getConsent, isDone } from '~/session.server';
 
 export const meta: V2_MetaFunction = () => {
@@ -31,9 +32,9 @@ export default function Index() {
       </div>
       <div className={styles.content}>
         {done ? (
-          <>
-            Thank you for participating in this experiment! It would be greatly appreciated if you shared this experiment with others.
-          </>
+          <div className={styles.debrief}>
+            <DebriefText/>
+          </div>
         ) : (
           <>
             <span>
