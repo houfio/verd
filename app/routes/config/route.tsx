@@ -65,6 +65,10 @@ export default function Config() {
             {
               title: 'Scenarios',
               to: '/config/scenarios'
+            },
+            {
+              title: 'Results',
+              to: '/config/results'
             }
           ]}
         />
