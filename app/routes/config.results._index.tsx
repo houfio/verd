@@ -65,7 +65,7 @@ export default function Scenarios() {
         columns={{
           date: {
             label: 'Date',
-            render: (date) => format(parseISO(date), 'yyyy-MM-dd HH:SS')
+            render: (date) => format(parseISO(date), 'yyyy-MM-dd HH:mm')
           },
           condition: {
             label: 'Condition',

@@ -29,7 +29,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const done = await isDone(request);
   const url = new URL(request.url);
 
-  if (done && url.pathname !== '/') {
+  if (done && url.pathname !== '/' && !url.pathname.startsWith('/config')) {
     return redirect('/');
   }
 
