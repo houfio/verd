@@ -32,6 +32,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   if (!consent || !kind) {
     return redirect('/');
+  } if (kind === SurveyKind.POST) {
+    const products = await getProducts(request);
+    const scenarios = await db.scenario.count();
+
+    if (products.length !== scenarios) {
+      return redirect('/');
+    }
   }
 
   const questions = await db.question.findMany({

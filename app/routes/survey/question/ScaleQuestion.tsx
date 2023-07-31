@@ -14,18 +14,28 @@ export function ScaleQuestion({ question }: Props) {
     return null;
   }
 
+  const options = [
+    ...question.data.options as string[],
+    'Prefer not to say'
+  ];
+
   return (
     <div>
       {question.order + 1}. {question.title}
       <div className={styles.radio}>
-        {(question.data.options as string[]).map((option, i) => (
+        {options.map((option, i) => (
           <label key={i} htmlFor={`${question.id}-${i}`} className={styles.label}>
-            <input type="radio" id={`${question.id}-${i}`} name={question.id} value={i}/>
+            <input
+              type="radio"
+              id={`${question.id}-${i}`}
+              name={question.id}
+              value={i === options.length - 1 ? -1 : i}
+            />
             <FontAwesomeIcon icon={faCircle} className={styles.unchecked}/>
             <FontAwesomeIcon icon={faCircleCheck} className={styles.checked}/>
             <span>
-            {option}
-          </span>
+              {option}
+            </span>
           </label>
         ))}
       </div>

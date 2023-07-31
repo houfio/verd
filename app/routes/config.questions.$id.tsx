@@ -49,19 +49,18 @@ export const action = ({ request, params: { id } }: ActionArgs) => actions(reque
   })
 }, {
   upsert: async ({ title, survey, type, data }) => {
-    const parsedData = JSON.parse(data);
+    const obj = {
+      title,
+      survey,
+      type,
+      data: JSON.parse(data),
+    };
 
     await db.question.upsert({
       where: { id },
-      update: {
-        title,
-        data: parsedData
-      },
+      update: obj,
       create: {
-        title,
-        survey,
-        type,
-        data: parsedData,
+        ...obj,
         order: await db.question.count({
           where: { survey }
         })
@@ -89,11 +88,13 @@ export default function Question() {
           name="survey"
           label="Survey"
           values={toOptions(surveys)}
+          defaultValue={question?.survey}
         />
         <Select
           name="type"
           label="Type"
           values={toOptions(questionTypes)}
+          defaultValue={question?.type}
         />
         <Input name="data" label="Data" as="textarea" defaultValue={JSON.stringify((question as any)?.data)}/>
         <Button text={question ? 'Update' : 'Add'} type="submit"/>
