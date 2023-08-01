@@ -1,4 +1,4 @@
-import { useLoaderData } from '@remix-run/react';
+import { stringify } from 'csv-stringify/sync';
 
 import { db } from '~/db.server';
 import { csv } from '~/utils/csv.server';
@@ -23,7 +23,7 @@ export const loader = async () => {
 
       return {
         ...previous,
-        [current.name]: `"${encodeURIComponent(answer?.answer ?? '')}"`
+        [current.name]: answer?.answer ?? ''
       };
     }, {});
 
@@ -46,10 +46,7 @@ export const loader = async () => {
     };
   });
 
-  const data = [
-    Object.keys(mapped[0]),
-    ...mapped.map((m) => Object.values(m))
-  ].join('\n');
-
-  return csv(data);
+  return csv(stringify(mapped, {
+    header: true
+  }));
 };
