@@ -23,7 +23,7 @@ export const loader = async () => {
 
       return {
         ...previous,
-        [current.name]: answer?.answer ?? ''
+        [current.name]: `"${encodeURIComponent(answer?.answer ?? '')}"`
       };
     }, {});
 
