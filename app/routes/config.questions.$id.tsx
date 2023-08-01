@@ -42,14 +42,16 @@ export const loader = async ({ params: { id } }: LoaderArgs) => {
 
 export const action = ({ request, params: { id } }: ActionArgs) => actions(request, {
   upsert: z.object({
+    name: z.string(),
     title: z.string().min(3),
     survey: z.nativeEnum(Survey),
     type: z.nativeEnum(QuestionType),
     data: z.string()
   })
 }, {
-  upsert: async ({ title, survey, type, data }) => {
+  upsert: async ({ name, title, survey, type, data }) => {
     const obj = {
+      name,
       title,
       survey,
       type,
@@ -83,6 +85,7 @@ export default function Question() {
       />
       <Form method="post">
         <input type="hidden" name="action" value="upsert"/>
+        <Input name="name" label="Name" defaultValue={question?.name}/>
         <Input name="title" label="Title" defaultValue={question?.title}/>
         <Select
           name="survey"

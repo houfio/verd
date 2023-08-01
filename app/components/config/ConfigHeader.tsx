@@ -1,6 +1,6 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from '@remix-run/react';
+import { createPath, Link } from '@remix-run/react';
 import type { To } from '@remix-run/router';
 
 import styles from './ConfigHeader.module.css';
@@ -12,7 +12,8 @@ type Props = {
   title: string[],
   actions?: {
     icon: IconProp,
-    to: To
+    to: To,
+    download?: string
   }[],
   result?: ResponseType<SuccessResponse<unknown> | ErrorResponse>
 };
@@ -36,7 +37,16 @@ export function ConfigHeader({ title, actions, result }: Props) {
             </span>
           ))}
         </span>
-        {actions?.map((action, i) => (
+        {actions?.map((action, i) => action.download ? (
+          <a
+            key={i}
+            href={typeof action.to === 'string' ? action.to : createPath(action.to)}
+            className={styles.action}
+            download={action.download}
+          >
+            <FontAwesomeIcon icon={action.icon}/>
+          </a>
+        ) : (
           <Link key={i} to={action.to} className={styles.action}>
             <FontAwesomeIcon icon={action.icon}/>
           </Link>

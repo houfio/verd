@@ -1,4 +1,4 @@
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs } from '@vercel/remix';
@@ -59,6 +59,13 @@ export default function Scenarios() {
       <ConfigHeader
         title={['Results']}
         result={result}
+        actions={[
+          {
+            icon: faFloppyDisk,
+            to: '/config/results/export',
+            download: `results_${format(new Date(), 'yyyy-MM-dd_HH-mm')}`
+          }
+        ]}
       />
       <Table
         id={(result) => result.id}

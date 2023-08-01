@@ -45,6 +45,7 @@ enum Survey {
 model Question {
   id      String       @id @default(cuid())
   survey  Survey
+  name    String       @default("")
   title   String
   type    QuestionType
   order   Int
