@@ -8,7 +8,7 @@ import { Container } from '~/components/Container';
 import { Expand } from '~/components/Expand';
 import { Button } from '~/components/form/Button';
 import DebriefText from '~/routes/_index/DebriefText.mdx';
-import { getConsent, isDone } from '~/session.server';
+import { addExtra, getConsent, hasExtra, isDone } from '~/session.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -16,13 +16,24 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-export const loader = async ({ request }: LoaderArgs) => json({
-  consent: await getConsent(request),
-  done: await isDone(request)
-});
+export const loader = async ({ request }: LoaderArgs) => {
+  let headers = {};
+  const url = new URL(request.url);
+  const surveyswap = url.searchParams.has('surveyswap');
+
+  if (surveyswap) {
+    headers = await addExtra(request, 'surveyswap');
+  }
+
+  return json({
+    consent: await getConsent(request),
+    done: await isDone(request),
+    surveyswap: surveyswap || await hasExtra(request, 'surveyswap')
+  }, { headers });
+};
 
 export default function Index() {
-  const { consent, done } = useLoaderData<typeof loader>();
+  const { consent, done, surveyswap } = useLoaderData<typeof loader>();
 
   return (
     <Container className={styles.container}>
@@ -34,6 +45,20 @@ export default function Index() {
         {done ? (
           <div className={styles.debrief}>
             <DebriefText/>
+            {surveyswap && (
+              <>
+                <br/>
+                <strong>
+                  What about my SurveySwap credits?
+                </strong>
+                <p>
+                  You can claim your SurveySwap credits by clicking on this link: <a href="https://surveyswap.io/sr/SIJW-VRMA-7X1H">https://surveyswap.io/sr/SIJW-VRMA-7X1H</a>
+                </p>
+                <p>
+                  Or, alternatively, enter the code manually: SIJW-VRMA-7X1H
+                </p>
+              </>
+            )}
           </div>
         ) : (
           <>
@@ -64,6 +89,11 @@ export default function Index() {
             <span>
               Want to participate? Great! Click on the button below to get started.
             </span>
+            {surveyswap && (
+              <span>
+                (This survey contains credits to get free survey responses at SurveySwap.io)
+              </span>
+            )}
             <div>
               <Button text={consent ? 'Continue' : 'Start'} as={Link} to={consent ? '/survey?k=pre' : '/consent'}/>
             </div>

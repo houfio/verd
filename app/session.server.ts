@@ -8,7 +8,8 @@ type SessionData = {
   answers: string,
   condition: string,
   products: string,
-  done: string
+  done: string,
+  extras: string
 };
 
 const sessionStorage = createCookieSessionStorage<SessionData>({
@@ -111,4 +112,24 @@ export async function isDone(request: Request) {
   const session = await getSession(request);
 
   return session.get('done') === 'true';
+}
+
+export async function addExtra(request: Request, extra: string) {
+  const session = await getSession(request);
+  const extras = JSON.parse(session.get('extras') ?? '[]');
+
+  if (!extras.includes(extra)) {
+    session.set('extras', JSON.stringify([...extras, extra]));
+  }
+
+  return {
+    'Set-Cookie': await sessionStorage.commitSession(session)
+  };
+}
+
+export async function hasExtra(request: Request, extra: string) {
+  const session = await getSession(request);
+  const extras = JSON.parse(session.get('extras') ?? '[]');
+
+  return extras.includes(extra);
 }
