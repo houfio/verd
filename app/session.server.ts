@@ -1,7 +1,7 @@
 import { createCookieSessionStorage } from '@remix-run/node';
 
+import { db } from '~/db.server';
 import { ExperimentCondition } from '~/utils/ExperimentCondition';
-import { randomEnum } from '~/utils/randomEnum.server';
 
 type SessionData = {
   consent: string,
@@ -60,7 +60,26 @@ export async function setAnswers(request: Request, data: Record<string, string>,
   session.set('answers', JSON.stringify(object));
 
   if (!session.has('condition')) {
-    session.set('condition', randomEnum(ExperimentCondition).toString());
+    const count = await db.result.groupBy({
+      by: ['condition'],
+      _count: true
+    });
+    const conditions = Object.keys(ExperimentCondition)
+      .map(n => parseInt(n))
+      .filter(n => !isNaN(n));
+
+    for (const condition of conditions) {
+      if (!count.some((c) => c.condition === condition)) {
+        count.push({
+          _count: 0,
+          condition
+        });
+      }
+    }
+
+    count.sort((a, b) => a._count - b._count);
+
+    session.set('condition', count[0].condition.toString());
   }
 
   let done = false;
