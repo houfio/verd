@@ -1,9 +1,16 @@
+import type { LoaderArgs } from '@vercel/remix';
+import { json } from '@vercel/remix';
 import { stringify } from 'csv-stringify/sync';
 
 import { db } from '~/db.server';
 import { csv } from '~/utils/csv.server';
+import { isAuthenticated } from '~/utils/isAuthenticated.server';
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderArgs) => {
+  if (!isAuthenticated(request)) {
+    return json({ authorized: false }, { status: 401 });
+  }
+
   const questions = await db.question.findMany();
   const scenarios = await db.scenario.findMany();
   const results = await db.result.findMany({

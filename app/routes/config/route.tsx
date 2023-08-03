@@ -7,6 +7,7 @@ import styles from './route.module.css';
 import { Container } from '~/components/Container';
 import { Footer } from '~/components/Footer';
 import { OptionList } from '~/components/OptionList';
+import { isAuthenticated } from '~/utils/isAuthenticated.server';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -19,18 +20,11 @@ export const headers: HeadersFunction = () => ({
 });
 
 export const loader = ({ request }: LoaderArgs) => {
-  const header = request.headers.get('Authorization');
-
-  if (header) {
-    const base64 = header.replace('Basic ', '');
-    const [username, password] = Buffer.from(base64, 'base64').toString().split(':');
-
-    if (username === process.env.CONFIG_USERNAME && password === process.env.CONFIG_PASSWORD) {
-      return json({ authorized: true });
-    }
+  if (!isAuthenticated(request)) {
+    return json({ authorized: false }, { status: 401 });
   }
 
-  return json({ authorized: false }, { status: 401 });
+  return json({ authorized: true });
 };
 
 export default function Config() {
