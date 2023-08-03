@@ -3,3 +3,7 @@
   margin-bottom: 1.5rem;
   border: 1px solid lightgray;
 }
+
+.stats > *:first-child {
+  font-weight: 600;
+}
