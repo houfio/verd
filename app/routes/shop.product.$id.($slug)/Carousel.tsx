@@ -17,7 +17,7 @@ export function Carousel({ product }: Props) {
 
   const images = [
     ...product.images,
-    ...condition === ExperimentCondition.LABELS && product.label ? [product.label] : []
+    ...condition === ExperimentCondition.EXPERIMENTAL && product.label ? [product.label] : []
   ];
 
   return (

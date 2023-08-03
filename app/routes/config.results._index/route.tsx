@@ -89,7 +89,11 @@ export default function Scenarios() {
           },
           condition: {
             label: 'Condition',
-            render: (condition) => condition ? 'Experimental' : 'Control'
+            render: (condition) => {
+              const label = ExperimentCondition[condition];
+
+              return `${label[0]}${label.substring(1).toLowerCase()}`;
+            }
           },
           id: {
             label: 'Actions',

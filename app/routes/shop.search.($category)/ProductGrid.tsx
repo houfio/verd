@@ -29,7 +29,7 @@ export function ProductGrid({ products }: Props) {
                 £{p.price.toFixed(2)}
               </div>
               <img src={p.images[0]} alt={p.name} className={styles.image}/>
-              {condition === ExperimentCondition.LABELS && p.label && (
+              {condition === ExperimentCondition.EXPERIMENTAL && p.label && (
                 <img
                   src={p.label}
                   className={styles.label}
