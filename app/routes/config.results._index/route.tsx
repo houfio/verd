@@ -7,11 +7,14 @@ import { format, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
+import styles from './route.module.css';
+
 import { Modal } from '~/components/Modal';
 import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
 import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
+import { ExperimentCondition } from '~/utils/ExperimentCondition';
 import { actions } from '~/utils/actions.server';
 
 export const loader = async () => json({
@@ -67,6 +70,16 @@ export default function Scenarios() {
           }
         ]}
       />
+      <div className={styles.stats}>
+        <p>
+          {results.length} participants
+        </p>
+        {Object.values(ExperimentCondition).filter((k) => typeof k === 'string').map((condition, i) => (
+          <p key={i}>
+            - {results.filter((r) => r.condition === i).length} {condition.toString().toLowerCase()}
+          </p>
+        ))}
+      </div>
       <Table
         id={(result) => result.id}
         columns={{
