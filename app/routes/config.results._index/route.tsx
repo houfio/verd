@@ -4,17 +4,20 @@ import {
   faCircleXmark,
   faEye,
   faEyeSlash,
-  faFloppyDisk
+  faFloppyDisk,
+  faNoteSticky
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs } from '@vercel/remix';
 import { json } from '@vercel/remix';
 import { format, parseISO } from 'date-fns';
+import { useState } from 'react';
 import { z } from 'zod';
 
 import styles from './route.module.css';
 
+import { Modal } from '~/components/Modal';
 import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
 import { db } from '~/db.server';
@@ -31,6 +34,16 @@ export const loader = async () => json({
               scenarioId: true,
               label: true
             }
+          }
+        }
+      },
+      answers: {
+        where: {
+          answer: {
+            not: ''
+          },
+          question: {
+            name: 'note'
           }
         }
       }
@@ -58,6 +71,8 @@ export const action = ({ request }: ActionArgs) => actions(request, {
 export default function Scenarios() {
   const { results } = useLoaderData<typeof loader>();
   const result = useActionData<typeof action>();
+  const [open, setOpen] = useState(false);
+  const [note, setNote] = useState<string>();
 
   return (
     <>
@@ -117,8 +132,18 @@ export default function Scenarios() {
           id: {
             label: 'Actions',
             shrink: true,
-            render: (id, { exclude }) => (
+            render: (id, { answers, exclude }) => (
               <div id="actions">
+                {answers.length > 0 && (
+                  <button
+                    onClick={() => {
+                      setNote(answers[0].answer);
+                      setOpen(true);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faNoteSticky}/>
+                  </button>
+                )}
                 <Form method="post">
                   <input type="hidden" name="action" value="exclude"/>
                   <input type="hidden" name="id" value={id}/>
@@ -134,6 +159,9 @@ export default function Scenarios() {
         rows={results}
         rowClassName={(result) => result.exclude ? styles.excluded : undefined}
       />
+      <Modal title="Note" open={open} onClose={() => setOpen(false)}>
+        {note}
+      </Modal>
     </>
   );
 }
