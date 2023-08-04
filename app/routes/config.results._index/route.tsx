@@ -1,4 +1,11 @@
-import { faEye, faEyeSlash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircle,
+  faCircleCheck,
+  faCircleXmark,
+  faEye,
+  faEyeSlash,
+  faFloppyDisk
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs } from '@vercel/remix';
@@ -15,9 +22,19 @@ import { ExperimentCondition } from '~/utils/ExperimentCondition';
 import { actions } from '~/utils/actions.server';
 
 export const loader = async () => json({
-  scenarios: await db.scenario.findMany(),
   results: await db.result.findMany({
-    include: { products: true },
+    include: {
+      products: {
+        include: {
+          product: {
+            select: {
+              scenarioId: true,
+              label: true
+            }
+          }
+        }
+      }
+    },
     orderBy: { date: 'asc' }
   })
 });
@@ -82,6 +99,20 @@ export default function Scenarios() {
 
               return `${label[0]}${label.substring(1).toLowerCase()}`;
             }
+          },
+          products: {
+            label: 'Results',
+            render: (products) => (
+              <div>
+                {products.map((product) => (
+                  <FontAwesomeIcon
+                    key={product.scenarioId}
+                    icon={product.product.scenarioId === product.scenarioId ? product.product.label ? faCircleCheck : faCircle : faCircleXmark}
+                    fixedWidth={true}
+                  />
+                ))}
+              </div>
+            )
           },
           id: {
             label: 'Actions',
