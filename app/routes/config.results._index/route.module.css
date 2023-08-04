@@ -7,3 +7,7 @@
 .stats > *:first-child {
   font-weight: 600;
 }
+
+.excluded {
+  opacity: .25;
+}

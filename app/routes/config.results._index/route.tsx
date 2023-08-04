@@ -1,61 +1,46 @@
-import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs } from '@vercel/remix';
 import { json } from '@vercel/remix';
 import { format, parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import styles from './route.module.css';
 
-import { Modal } from '~/components/Modal';
 import { ConfigHeader } from '~/components/config/ConfigHeader';
 import { Table } from '~/components/config/Table';
-import { Button } from '~/components/form/Button';
 import { db } from '~/db.server';
 import { ExperimentCondition } from '~/utils/ExperimentCondition';
 import { actions } from '~/utils/actions.server';
 
 export const loader = async () => json({
-  results: await db.result.findMany()
+  scenarios: await db.scenario.findMany(),
+  results: await db.result.findMany({
+    include: { products: true },
+    orderBy: { date: 'asc' }
+  })
 });
 
 export const action = ({ request }: ActionArgs) => actions(request, {
-  delete: z.object({
-    id: z.string()
+  exclude: z.object({
+    id: z.string(),
+    exclude: z.enum(['true', 'false']).transform((value) => value === 'true')
   })
 }, {
-  delete: async ({ id }) => {
-    await db.$transaction([
-      db.selectedProduct.deleteMany({
-        where: {
-          result: { id }
-        }
-      }),
-      db.answer.deleteMany({
-        where: {
-          result: { id }
-        }
-      }),
-      db.result.delete({
-        where: { id }
-      })
-    ]);
+  exclude: async ({ id, exclude }) => {
+    await db.result.update({
+      where: { id },
+      data: { exclude }
+    });
 
-    return 'Successfully deleted result';
+    return `Successfully ${exclude ? 'excluded' : 'included'} result`;
   }
 });
 
 export default function Scenarios() {
   const { results } = useLoaderData<typeof loader>();
   const result = useActionData<typeof action>();
-  const [open, setOpen] = useState(false);
-  const [remove, setRemove] = useState<string>();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [result]);
 
   return (
     <>
@@ -76,9 +61,12 @@ export default function Scenarios() {
         </p>
         {Object.values(ExperimentCondition).filter((k) => typeof k === 'string').map((condition, i) => (
           <p key={i}>
-            - {results.filter((r) => r.condition === i).length} {condition.toString().toLowerCase()}
+            - {results.filter((r) => r.condition === i && !r.exclude).length} {condition.toString().toLowerCase()}
           </p>
         ))}
+        <p>
+          - {results.filter((r) => r.exclude).length} excluded
+        </p>
       </div>
       <Table
         id={(result) => result.id}
@@ -98,33 +86,23 @@ export default function Scenarios() {
           id: {
             label: 'Actions',
             shrink: true,
-            render: (id) => (
+            render: (id, { exclude }) => (
               <div id="actions">
-                <button
-                  onClick={() => {
-                    setRemove(id);
-                    setOpen(true);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faTrash}/>
-                </button>
+                <Form method="post">
+                  <input type="hidden" name="action" value="exclude"/>
+                  <input type="hidden" name="id" value={id}/>
+                  <input type="hidden" name="exclude" value={String(!exclude)}/>
+                  <button type="submit">
+                    <FontAwesomeIcon icon={exclude ? faEye : faEyeSlash}/>
+                  </button>
+                </Form>
               </div>
             )
           }
         }}
         rows={results}
+        rowClassName={(result) => result.exclude ? styles.excluded : undefined}
       />
-      <Modal title="Delete" open={open} onClose={() => setOpen(false)}>
-        Are you sure you want to delete this scenario?
-        <div id="actions">
-          <Button text="Cancel" white={true} onClick={() => setOpen(false)}/>
-          <Form method="post">
-            <input type="hidden" name="action" value="delete"/>
-            <input type="hidden" name="id" value={remove}/>
-            <Button text="Delete" type="submit"/>
-          </Form>
-        </div>
-      </Modal>
     </>
   );
 }

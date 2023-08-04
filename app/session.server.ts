@@ -62,6 +62,7 @@ export async function setAnswers(request: Request, data: Record<string, string>,
   if (!session.has('condition')) {
     const count = await db.result.groupBy({
       by: ['condition'],
+      where: { exclude: false },
       _count: true
     });
     const conditions = Object.keys(ExperimentCondition)

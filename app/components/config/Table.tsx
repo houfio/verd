@@ -6,7 +6,7 @@ import styles from './Table.module.css';
 type Column<T, K extends keyof T = keyof T> = {
   label: string,
   shrink?: boolean,
-  render?: (value: T[K]) => ReactNode
+  render?: (value: T[K], data: T) => ReactNode
 };
 
 type Props<T> = {
@@ -14,10 +14,11 @@ type Props<T> = {
   columns: {
     [K in keyof T]?: Column<T, K>
   },
-  rows: T[]
+  rows: T[],
+  rowClassName?: (row: T) => string | undefined
 };
 
-export function Table<T>({ id, columns, rows }: Props<T>) {
+export function Table<T>({ id, columns, rows, rowClassName }: Props<T>) {
   const entries = Object.entries(columns) as [keyof T & string, Column<T>][];
 
   return (
@@ -33,10 +34,10 @@ export function Table<T>({ id, columns, rows }: Props<T>) {
       </thead>
       <tbody className={styles.body}>
         {rows.map((row) => (
-          <tr key={id(row)}>
+          <tr key={id(row)} className={rowClassName?.(row)}>
             {entries.map(([column, { shrink, render }]) => (
               <td key={column} className={clsx(shrink && styles.shrink)}>
-                {render?.(row[column]) ?? row[column] as ReactNode}
+                {render?.(row[column], row) ?? row[column] as ReactNode}
               </td>
             ))}
           </tr>

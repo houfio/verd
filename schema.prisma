@@ -64,6 +64,7 @@ enum QuestionType {
 model Result {
   id        String            @id @default(cuid())
   date      DateTime          @default(now())
+  exclude   Boolean           @default(false)
   condition Int
   answers   Answer[]
   products  SelectedProduct[]
