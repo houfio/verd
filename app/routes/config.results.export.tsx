@@ -21,7 +21,8 @@ export const loader = async ({ request }: LoaderArgs) => {
           product: true
         }
       }
-    }
+    },
+    orderBy: { date: 'asc' }
   });
 
   const mapped = results.map((result) => {
@@ -48,6 +49,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     return {
       date: result.date,
       condition: result.condition,
+      exclude: result.exclude,
       ...answers,
       ...products
     };
