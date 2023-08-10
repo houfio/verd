@@ -27,11 +27,23 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const mapped = results.map((result) => {
     const answers = questions.reduce((previous, current) => {
-      const answer = result.answers.find((a) => a.questionId === current.id);
+      let answer = result.answers.find((a) => a.questionId === current.id)?.answer ?? '';
+
+      if (current.data && typeof current.data === 'object' && 'mapped' in current.data && current.data.mapped && 'options' in current.data) {
+        const index = Number(answer);
+
+        if (!isNaN(index)) {
+          if (index === -1) {
+            answer = 'Prefer not to say';
+          } else {
+            answer = (current.data.options as string[])[index];
+          }
+        }
+      }
 
       return {
         ...previous,
-        [current.name]: answer?.answer ?? ''
+        [current.name]: answer
       };
     }, {});
 
@@ -56,6 +68,9 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   return csv(stringify(mapped, {
-    header: true
+    header: true,
+    cast: {
+      boolean: (v) => v ? '1' : '0'
+    }
   }));
 };
