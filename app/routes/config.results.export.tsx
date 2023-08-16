@@ -73,6 +73,14 @@ export const loader = async ({ request }: LoaderArgs) => {
       const selected = result.products.find((p) => p.scenarioId === current.id);
       const name = current.name.toLowerCase();
 
+      if (coded) {
+        const count = 'sustainable' in previous ? previous['sustainable'] as number : 0;
+
+        return {
+          'sustainable': count + (selected?.product.scenarioId === current.id && selected?.product.label ? 1 : 0)
+        };
+      }
+
       return {
         ...previous,
         [`${name}Satisfied`]: selected?.product.scenarioId === current.id,
