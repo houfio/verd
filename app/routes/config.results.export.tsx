@@ -35,7 +35,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         let answer = result.answers.find((a) => a.questionId === current.id)?.answer ?? '';
 
         if (current.data && typeof current.data === 'object') {
-          if ('omit' in current.data && current.data.omit) {
+          if (coded && 'omit' in current.data && current.data.omit) {
             return previous;
           }
 
