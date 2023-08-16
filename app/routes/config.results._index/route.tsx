@@ -3,7 +3,7 @@ import {
   faCircleCheck,
   faCircleXmark,
   faEye,
-  faEyeSlash,
+  faEyeSlash, faFileCode,
   faFloppyDisk,
   faNoteSticky
 } from '@fortawesome/free-solid-svg-icons';
@@ -84,6 +84,11 @@ export default function Scenarios() {
             icon: faFloppyDisk,
             to: '/config/results/export',
             download: `results_${format(new Date(), 'yyyy-MM-dd_HH-mm')}`
+          },
+          {
+            icon: faFileCode,
+            to: '/config/results/export?c',
+            download: `results_${format(new Date(), 'yyyy-MM-dd_HH-mm')}_coded`
           }
         ]}
       />

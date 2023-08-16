@@ -11,6 +11,9 @@ export const loader = async ({ request }: LoaderArgs) => {
     return json({ authorized: false }, { status: 401 });
   }
 
+  const url = new URL(request.url);
+  const coded = url.searchParams.has('c');
+
   const questions = await db.question.findMany();
   const scenarios = await db.scenario.findMany();
   const results = await db.result.findMany({
@@ -29,14 +32,33 @@ export const loader = async ({ request }: LoaderArgs) => {
     const answers = questions.reduce((previous, current) => {
       let answer = result.answers.find((a) => a.questionId === current.id)?.answer ?? '';
 
-      if (current.data && typeof current.data === 'object' && 'mapped' in current.data && current.data.mapped && 'options' in current.data) {
-        const index = Number(answer);
+      if (current.data && typeof current.data === 'object') {
+        if ('omit' in current.data && current.data.omit) {
+          return previous;
+        }
 
-        if (!isNaN(index)) {
-          if (index === -1) {
-            answer = 'Prefer not to say';
-          } else {
-            answer = (current.data.options as string[])[index];
+        if ('options' in current.data) {
+          const options = current.data.options as string[];
+          let index = Number(answer);
+
+          if (coded && isNaN(index)) {
+            index = options.indexOf(answer);
+
+            if (index > -1 && 'reverse' in current.data && current.data.reverse) {
+              index = options.length - index - 1;
+            }
+
+            answer = String(index);
+          }
+
+          if (!coded && 'mapped' in current.data && current.data.mapped) {
+            if (!isNaN(index)) {
+              if (index === -1) {
+                answer = 'Prefer not to say';
+              } else {
+                answer = options[index];
+              }
+            }
           }
         }
       }
