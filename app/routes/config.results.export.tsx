@@ -28,74 +28,78 @@ export const loader = async ({ request }: LoaderArgs) => {
     orderBy: { date: 'asc' }
   });
 
-  const mapped = results.map((result) => {
-    const answers = questions.reduce((previous, current) => {
-      let answer = result.answers.find((a) => a.questionId === current.id)?.answer ?? '';
+  const mapped = results
+    .filter((result) => !coded || !result.exclude)
+    .map((result) => {
+      const answers = questions.reduce((previous, current) => {
+        let answer = result.answers.find((a) => a.questionId === current.id)?.answer ?? '';
 
-      if (current.data && typeof current.data === 'object') {
-        if ('omit' in current.data && current.data.omit) {
-          return previous;
-        }
-
-        if ('options' in current.data) {
-          const options = current.data.options as string[];
-          let index = Number(answer);
-
-          if (coded && isNaN(index)) {
-            index = options.indexOf(answer);
-
-            if (index > -1 && 'reverse' in current.data && current.data.reverse) {
-              index = options.length - index - 1;
-            }
-
-            answer = String(index);
+        if (current.data && typeof current.data === 'object') {
+          if ('omit' in current.data && current.data.omit) {
+            return previous;
           }
 
-          if (!coded && 'mapped' in current.data && current.data.mapped) {
-            if (!isNaN(index)) {
-              if (index === -1) {
-                answer = 'Prefer not to say';
-              } else {
-                answer = options[index];
+          if ('options' in current.data) {
+            const options = current.data.options as string[];
+            let index = Number(answer);
+
+            if (coded && isNaN(index)) {
+              index = options.indexOf(answer);
+
+              if (index > -1 && 'reverse' in current.data && current.data.reverse) {
+                index = options.length - index - 1;
+              }
+
+              answer = String(index);
+            }
+
+            if (!coded && 'mapped' in current.data && current.data.mapped) {
+              if (!isNaN(index)) {
+                if (index === -1) {
+                  answer = 'Prefer not to say';
+                } else {
+                  answer = options[index];
+                }
               }
             }
           }
         }
-      }
-
-      return {
-        ...previous,
-        [current.name]: answer
-      };
-    }, {});
-
-    const products = scenarios.reduce((previous, current) => {
-      const selected = result.products.find((p) => p.scenarioId === current.id);
-      const name = current.name.toLowerCase();
-
-      if (coded) {
-        const count = 'sustainable' in previous ? previous['sustainable'] as number : 0;
 
         return {
-          'sustainable': count + (selected?.product.scenarioId === current.id && selected?.product.label ? 1 : 0)
+          ...previous,
+          [current.name]: answer
         };
-      }
+      }, {});
+
+      const products = scenarios.reduce((previous, current) => {
+        const selected = result.products.find((p) => p.scenarioId === current.id);
+        const name = current.name.toLowerCase();
+
+        if (coded) {
+          const count = 'sustainable' in previous ? previous['sustainable'] as number : 0;
+
+          return {
+            'sustainable': count + (selected?.product.scenarioId === current.id && selected?.product.label ? 1 : 0)
+          };
+        }
+
+        return {
+          ...previous,
+          [`${name}Satisfied`]: selected?.product.scenarioId === current.id,
+          [`${name}Sustainable`]: selected?.product.label !== null
+        };
+      }, {});
 
       return {
-        ...previous,
-        [`${name}Satisfied`]: selected?.product.scenarioId === current.id,
-        [`${name}Sustainable`]: selected?.product.label !== null
+        date: result.date,
+        condition: result.condition,
+        ...coded ? {} : {
+          exclude: result.exclude
+        },
+        ...answers,
+        ...products
       };
-    }, {});
-
-    return {
-      date: result.date,
-      condition: result.condition,
-      exclude: result.exclude,
-      ...answers,
-      ...products
-    };
-  });
+    });
 
   return csv(stringify(mapped, {
     header: true,
