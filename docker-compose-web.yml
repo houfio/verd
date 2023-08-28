@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - SESSION_SECRET=secret
+      - CONFIG_USERNAME=username
+      - CONFIG_PASSWORD=password
+    ports:
+      - '3000:3000'
