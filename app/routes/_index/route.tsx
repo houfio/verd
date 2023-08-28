@@ -8,6 +8,7 @@ import { Container } from '~/components/Container';
 import { Expand } from '~/components/Expand';
 import { Button } from '~/components/form/Button';
 import DebriefText from '~/routes/_index/DebriefText.mdx';
+import FinishedText from '~/routes/_index/FinishedText.mdx';
 import { addExtra, getConsent, hasExtra, isDone } from '~/session.server';
 
 export const meta: V2_MetaFunction = () => {
@@ -28,12 +29,13 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({
     consent: await getConsent(request),
     done: await isDone(request),
+    finished: Boolean(process.env.FINISHED),
     surveyswap: surveyswap || await hasExtra(request, 'surveyswap')
   }, { headers });
 };
 
 export default function Index() {
-  const { consent, done, surveyswap } = useLoaderData<typeof loader>();
+  const { consent, done, finished, surveyswap } = useLoaderData<typeof loader>();
 
   return (
     <Container className={styles.container}>
@@ -42,7 +44,9 @@ export default function Index() {
         Experiment
       </div>
       <div className={styles.content}>
-        {done ? (
+        {finished ? (
+          <FinishedText/>
+        ) : done ? (
           <div className={styles.debrief}>
             <DebriefText/>
             {surveyswap && (
