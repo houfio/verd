@@ -7,7 +7,6 @@ COPY app/ ./app
 COPY public/ ./public
 
 RUN npm ci
-RUN npm exec prisma generate
 RUN npm exec remix build
 
 FROM node:18-alpine
@@ -20,6 +19,5 @@ COPY --from=build /app/public ./public
 COPY migrations/ ./migrations
 
 RUN npm ci --omit=dev
-RUN npm exec prisma generate
 
-CMD npm exec prisma migrate deploy && npm exec remix-serve build
+CMD npm start

@@ -2,7 +2,9 @@
   "name": "verd",
   "version": "1.0.0",
   "scripts": {
-    "build": "prisma generate && prisma migrate deploy && remix build",
+    "prepare": "prisma generate",
+    "build": "prisma migrate deploy && remix build",
+    "start": "prisma migrate deploy && remix-serve build",
     "dev": "remix dev",
     "typecheck": "tsc"
   },
