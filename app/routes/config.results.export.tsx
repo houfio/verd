@@ -13,6 +13,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const url = new URL(request.url);
   const coded = url.searchParams.has('c');
+  const minimal = url.searchParams.has('m');
 
   const questions = await db.question.findMany();
   const scenarios = await db.scenario.findMany();
@@ -29,8 +30,15 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   const mapped = results
-    .filter((result) => !coded || !result.exclude)
-    .map((result) => {
+    .filter((result) => (!coded && !minimal) || !result.exclude)
+    .flatMap((result) => {
+      if (minimal) {
+        return result.products.map<object>((product) => ({
+          condition: result.condition,
+          sustainable: Boolean(product.scenarioId === product.product.scenarioId && product.product.label)
+        }));
+      }
+
       const answers = questions.reduce((previous, current) => {
         let answer = result.answers.find((a) => a.questionId === current.id)?.answer ?? '';
 

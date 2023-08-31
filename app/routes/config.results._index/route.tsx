@@ -3,8 +3,10 @@ import {
   faCircleCheck,
   faCircleXmark,
   faEye,
-  faEyeSlash, faFileCode,
-  faFloppyDisk,
+  faEyeSlash,
+  faFileCode,
+  faFileExcel,
+  faFileLines,
   faNoteSticky
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -81,13 +83,18 @@ export default function Scenarios() {
         result={result}
         actions={[
           {
-            icon: faFloppyDisk,
+            icon: faFileLines,
             to: '/config/results/export',
             download: `results_${format(new Date(), 'yyyy-MM-dd_HH-mm')}`
           },
           {
-            icon: faFileCode,
+            icon: faFileExcel,
             to: '/config/results/export?c',
+            download: `results_${format(new Date(), 'yyyy-MM-dd_HH-mm')}_coded`
+          },
+          {
+            icon: faFileCode,
+            to: '/config/results/export?m',
             download: `results_${format(new Date(), 'yyyy-MM-dd_HH-mm')}_coded`
           }
         ]}
